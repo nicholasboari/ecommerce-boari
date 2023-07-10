@@ -74,8 +74,8 @@ public class BrandService {
 
     @Transactional
     public void delete(Long id) {
-        Brand brand = brandRepository.findById(id).orElseThrow(() -> new BadRequestException("Brand not found"));
-        brandRepository.delete(brand);
+        BrandDTO brand = findById(id);
+        brandRepository.deleteById(brand.id());
     }
 
 }

@@ -80,8 +80,8 @@ public class CategoryService {
 
     @Transactional
     public void delete(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new BadRequestException("Category not found"));
-        categoryRepository.delete(category);
+        CategoryDTO category = findById(id);
+        categoryRepository.deleteById(category.id());
     }
 
 }

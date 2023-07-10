@@ -6,5 +6,6 @@ import jakarta.validation.constraints.Size;
 
 public record BrandDTO(
         Long id,
-        @NotNull @Size(min = 2, max = 14, message = "size needs to be greater than 2 and less than 14") String name) {
+        @NotNull
+        @Size(min = 2, max = 14, message = "size needs to be greater than 2 and less than 14") String name) {
 }
