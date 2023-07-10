@@ -36,10 +36,19 @@ public class BrandService {
         return new BrandDTO(brand.getId(), brand.getName());
     }
 
+    public List<BrandDTO> findByNameContaining(String name) {
+        List<Brand> brands = brandRepository.findByNameContaining(name);
+        return brands
+                .stream()
+                .map(brand -> new BrandDTO(
+                        brand.getId(),
+                        brand.getName())).toList();
+    }
+
     @Transactional
     public BrandDTO save(BrandDTO brandDTO) {
-        Brand existingBrand = brandRepository.findByName(brandDTO.name());
-        if (existingBrand != null) {
+        List<Brand> list = brandRepository.findByName(brandDTO.name());
+        if (!list.isEmpty()) {
             throw new DataIntegrityViolationException("Brand name already exists!");
         }
 

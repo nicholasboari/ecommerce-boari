@@ -37,10 +37,21 @@ public class CategoryService {
         return new CategoryDTO(category.getId(), category.getName(), category.getImageUrl());
     }
 
+    public List<CategoryDTO> findByNameContaining(String name) {
+        List<Category> categories = categoryRepository.findByNameContaining(name);
+        return categories
+                .stream()
+                .map(category -> new CategoryDTO(
+                        category.getId(),
+                        category.getName(),
+                        category.getImageUrl())).toList();
+    }
+
+
     @Transactional
     public CategoryDTO save(CategoryDTO categoryDTO) {
-        Category existingCategory = categoryRepository.findByName(categoryDTO.name());
-        if (existingCategory != null) {
+        List<Category> list = categoryRepository.findByName(categoryDTO.name());
+        if (!list.isEmpty()) {
             throw new DataIntegrityViolationException("Category name already exists!");
         }
 

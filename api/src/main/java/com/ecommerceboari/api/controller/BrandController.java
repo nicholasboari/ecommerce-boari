@@ -37,6 +37,12 @@ public class BrandController {
         return ResponseEntity.ok().body(brand);
     }
 
+    @GetMapping("/find")
+    public ResponseEntity<List<BrandDTO>> findByName(@RequestParam String name) {
+        List<BrandDTO> brand = brandService.findByNameContaining(name);
+        return ResponseEntity.ok().body(brand);
+    }
+
     @PostMapping
     public ResponseEntity<BrandDTO> save(@Valid @RequestBody BrandDTO brandDTO) {
         BrandDTO brand = brandService.save(brandDTO);

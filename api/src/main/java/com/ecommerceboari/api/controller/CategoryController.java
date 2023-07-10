@@ -36,6 +36,12 @@ public class CategoryController {
         return ResponseEntity.ok().body(category);
     }
 
+    @GetMapping("/find")
+    public ResponseEntity<List<CategoryDTO>> findByNameContaining(@RequestParam String name) {
+        List<CategoryDTO> category = categoryService.findByNameContaining(name);
+        return ResponseEntity.ok().body(category);
+    }
+
     @PostMapping
     public ResponseEntity<CategoryDTO> save(@RequestBody CategoryDTO categoryDTO) {
         CategoryDTO category = categoryService.save(categoryDTO);
@@ -43,7 +49,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> update(@RequestBody CategoryDTO categoryDTO, @PathVariable Long id){
+    public ResponseEntity<CategoryDTO> update(@RequestBody CategoryDTO categoryDTO, @PathVariable Long id) {
         CategoryDTO categoryUpdated = categoryService.update(categoryDTO, id);
         return ResponseEntity.ok().body(categoryUpdated);
     }
