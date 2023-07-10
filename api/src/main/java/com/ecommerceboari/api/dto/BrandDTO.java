@@ -1,11 +1,22 @@
 package com.ecommerceboari.api.dto;
 
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record BrandDTO(
-        Long id,
-        @NotNull
-        @Size(min = 2, max = 14, message = "size needs to be greater than 2 and less than 14") String name) {
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class BrandDTO {
+
+    private Long id;
+
+    @Size(min = 2, message = "size needs to be greater than 2")
+    private String name;
 }
+

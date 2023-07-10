@@ -5,6 +5,7 @@ import com.ecommerceboari.api.exception.BadRequestException;
 import com.ecommerceboari.api.model.Address;
 import com.ecommerceboari.api.repository.AddressRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,83 +18,63 @@ import java.util.List;
 public class AddressService {
 
     private final AddressRepository addressRepository;
+    private final ModelMapper modelMapper;
 
     public List<AddressDTO> findAll() {
-        return addressRepository.findAll().stream().map(address -> new AddressDTO(
-                        address.getId(),
-                        address.getNeighborhood(),
-                        address.getCep(),
-                        address.getCountry(),
-                        address.getState(),
-                        address.getStreet()))
-                .toList();
+        return addressRepository.findAll().stream().map(AddressService::buildDto).toList();
     }
 
     public Page<AddressDTO> findPaged(Pageable pageable) {
         Page<Address> addresses = addressRepository.findAll(pageable);
-        return addresses.map(address -> new AddressDTO(
-                address.getId(),
-                address.getCep(),
-                address.getCountry(),
-                address.getState(),
-                address.getStreet(),
-                address.getNeighborhood()));
+        return addresses.map(AddressService::buildDto);
     }
 
     public AddressDTO findById(Long id) {
         Address address = addressRepository.findById(id).orElseThrow(() -> new BadRequestException("Address not found!"));
-        return new AddressDTO(address.getId(),
-                address.getCep(),
-                address.getCountry(),
-                address.getState(),
-                address.getStreet(),
-                address.getNeighborhood());
+        return buildDto(address);
     }
 
     @Transactional
     public AddressDTO save(AddressDTO addressDTO) {
-        Address address = Address.builder()
-                .id(addressDTO.id())
-                .cep(addressDTO.cep())
-                .state(addressDTO.state())
-                .country(addressDTO.country())
-                .neighborhood(addressDTO.neighborhood())
-                .street(addressDTO.street())
-                .build();
-
+        Address address = buildModel(addressDTO);
         Address addressSaved = addressRepository.save(address);
-        return new AddressDTO(addressSaved.getId(),
-                addressSaved.getCep(),
-                addressSaved.getCountry(),
-                addressSaved.getState(),
-                addressSaved.getStreet(),
-                addressSaved.getNeighborhood());
+        return modelMapper.map(addressSaved, AddressDTO.class);
     }
 
     @Transactional
     public AddressDTO update(AddressDTO addressDTO, Long id) {
-        AddressDTO dto = findById(id);
-        Address address = Address.builder()
-                .id(dto.id())
-                .cep(addressDTO.cep())
-                .state(addressDTO.state())
-                .country(addressDTO.country())
-                .neighborhood(addressDTO.neighborhood())
-                .street(addressDTO.street())
-                .build();
-
-        AddressDTO addressSaved = new AddressDTO(address.getId(),
-                address.getCep(),
-                address.getCountry(),
-                address.getState(),
-                address.getStreet(),
-                address.getNeighborhood());
+        findById(id);
+        Address address = buildModel(addressDTO);
+        address.setId(id);
+        AddressDTO addressSaved = buildDto(address);
         return save(addressSaved);
     }
 
     @Transactional
     public void delete(Long id) {
         AddressDTO address = findById(id);
-        addressRepository.deleteById(address.id());
+        addressRepository.deleteById(address.getId());
+    }
+
+    public static Address buildModel(AddressDTO addressDTO) {
+        return Address.builder()
+                .id(addressDTO.getId())
+                .street(addressDTO.getStreet())
+                .neighborhood(addressDTO.getNeighborhood())
+                .country(addressDTO.getCountry())
+                .state(addressDTO.getState())
+                .cep(addressDTO.getCep())
+                .build();
+    }
+
+    public static AddressDTO buildDto(Address address) {
+        return AddressDTO.builder()
+                .id(address.getId())
+                .street(address.getStreet())
+                .cep(address.getCep())
+                .country(address.getCountry())
+                .neighborhood(address.getNeighborhood())
+                .state(address.getState())
+                .build();
     }
 }

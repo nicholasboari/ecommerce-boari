@@ -1,11 +1,19 @@
 package com.ecommerceboari.api.dto;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record CategoryDTO(
-        Long id,
-        @NotNull
-        @Size(min = 2, max = 14, message = "size needs to be greater than 2 and less than 14") String name,
-        String imageUrl) {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class CategoryDTO {
+
+    private Long id;
+    @Size(min = 2, max = 14, message = "size needs to be greater than 2")
+    private String name;
+    private String imageUrl;
 }
