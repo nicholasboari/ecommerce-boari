@@ -29,7 +29,7 @@ public class ResourceExceptionHandler {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError error = StandardError.builder()
                 .message(e.getMessage())
-                .error("Duplicate key")
+                .error("Duplicate")
                 .path(request.getRequestURI())
                 .status(status.value())
                 .timestamp(System.currentTimeMillis())
