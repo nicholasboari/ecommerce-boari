@@ -6,21 +6,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @Entity
-@Table(name = "tb_address")
+@Table(name = "tb_order")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Address {
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String cep;
-    private String country;
-    private String state;
-    private String street;
-    private String neighborhood;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
 }

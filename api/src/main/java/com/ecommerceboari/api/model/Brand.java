@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Table(name = "tb_brand")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

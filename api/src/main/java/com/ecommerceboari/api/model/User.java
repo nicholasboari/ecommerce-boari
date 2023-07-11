@@ -11,9 +11,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity
+@Table(name = "tb_user")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -36,6 +38,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany
+    @JoinColumn(name = "order_id")
+    private List<Order> order;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -49,7 +54,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.username;
     }
 
     @Override

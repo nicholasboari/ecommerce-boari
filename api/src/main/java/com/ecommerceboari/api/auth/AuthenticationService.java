@@ -39,6 +39,7 @@ public class AuthenticationService {
 
         var user = User.builder()
                 .email(request.getEmail())
+                .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .firstName(request.getFirstName())
@@ -46,7 +47,6 @@ public class AuthenticationService {
                 .phone(request.getPhone())
                 .isActive(true)
                 .createdAt(LocalDateTime.now())
-                .email(request.getEmail())
                 .build();
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
@@ -56,10 +56,11 @@ public class AuthenticationService {
     public AuthenticationDTO login(UserLoginDTO request) {
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new BadRequestException("Email does not exist!"));
 
+        // verify user credentials with username and password
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
+                            user.getUsername(),
                             request.getPassword())
             );
 
@@ -72,8 +73,7 @@ public class AuthenticationService {
 
     public User returnUserAuthenticated() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        return userRepository.findByEmail(username).orElseThrow(() -> new UserUnauthorizedRequestException("User not authenticated!"));
+        return userRepository.findByUsername(username).orElseThrow(() -> new UserUnauthorizedRequestException("User not authenticated!"));
     }
 
     public void isAdminOrSelf(Long userId) {
