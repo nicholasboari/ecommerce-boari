@@ -22,22 +22,22 @@ public class BrandService {
     private final ModelMapper modelMapper;
 
     public List<BrandDTO> findAll() {
-        return brandRepository.findAll().stream().map(BrandService::buildDto).toList();
+        return brandRepository.findAll().stream().map(brand -> modelMapper.map(brand, BrandDTO.class)).toList();
     }
 
     public Page<BrandDTO> findPaged(Pageable pageable) {
         Page<Brand> brands = brandRepository.findAll(pageable);
-        return brands.map(BrandService::buildDto);
+        return brands.map(brand -> modelMapper.map(brand, BrandDTO.class));
     }
 
     public BrandDTO findById(Long id) {
         Brand brand = brandRepository.findById(id).orElseThrow(() -> new BadRequestException("Brand not found"));
-        return buildDto(brand);
+        return modelMapper.map(brand, BrandDTO.class);
     }
 
     public List<BrandDTO> findByNameContaining(String name) {
         List<Brand> brands = brandRepository.findByNameContaining(name);
-        return brands.stream().map(BrandService::buildDto).toList();
+        return brands.stream().map(brand -> modelMapper.map(brand, BrandDTO.class)).toList();
     }
 
     @Transactional
@@ -47,17 +47,17 @@ public class BrandService {
             throw new DataIntegrityViolationException("Brand name already exists!");
         }
 
-        Brand brand = buildModel(brandDTO);
+        Brand brand = modelMapper.map(brandDTO, Brand.class);
         Brand brandSaved = brandRepository.save(brand);
-        return buildDto(brandSaved);
+        return modelMapper.map(brandSaved, BrandDTO.class);
     }
 
     @Transactional
     public BrandDTO update(BrandDTO brandDTO, Long id) {
         findById(id);
-        Brand brand = buildModel(brandDTO);
+        Brand brand =  modelMapper.map(brandDTO, Brand.class);
         brand.setId(id);
-        BrandDTO brandSaved = buildDto(brand);
+        BrandDTO brandSaved =  modelMapper.map(brand, BrandDTO.class);
         return save(brandSaved);
     }
 
@@ -67,17 +67,4 @@ public class BrandService {
         brandRepository.deleteById(brand.getId());
     }
 
-    public static Brand buildModel(BrandDTO brandDTO){
-        return Brand.builder()
-                .id(brandDTO.getId())
-                .name(brandDTO.getName())
-                .build();
-    }
-
-    public static BrandDTO buildDto(Brand brand){
-        return BrandDTO.builder()
-                .id(brand.getId())
-                .name(brand.getName())
-                .build();
-    }
 }

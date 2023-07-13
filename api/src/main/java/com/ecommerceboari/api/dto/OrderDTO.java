@@ -5,12 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserLoginDTO {
+public class OrderDTO {
 
-    private String email;
-    private String password;
+    private Long id;
+    private List<ProductOrderDTO> products = new ArrayList<>();
 }

@@ -5,6 +5,7 @@ import com.ecommerceboari.api.exception.BadRequestException;
 import com.ecommerceboari.api.model.Category;
 import com.ecommerceboari.api.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,24 +19,25 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final ModelMapper modelMapper;
 
     public List<CategoryDTO> findAll() {
-        return categoryRepository.findAll().stream().map(CategoryService::buildDto).toList();
+        return categoryRepository.findAll().stream().map(category -> modelMapper.map(category, CategoryDTO.class)).toList();
     }
 
     public Page<CategoryDTO> findPaged(Pageable pageable) {
         Page<Category> categories = categoryRepository.findAll(pageable);
-        return categories.map(CategoryService::buildDto);
+        return categories.map(category -> modelMapper.map(category, CategoryDTO.class));
     }
 
     public CategoryDTO findById(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new BadRequestException("Category not found"));
-        return buildDto(category);
+        return modelMapper.map(category, CategoryDTO.class);
     }
 
     public List<CategoryDTO> findByNameContaining(String name) {
         List<Category> categories = categoryRepository.findByNameContaining(name);
-        return categories.stream().map(CategoryService::buildDto).toList();
+        return categories.stream().map(category -> modelMapper.map(category, CategoryDTO.class)).toList();
     }
 
 
@@ -46,17 +48,18 @@ public class CategoryService {
             throw new DataIntegrityViolationException("Category name already exists!");
         }
 
-        Category category = buildModel(categoryDTO);
+        Category category = modelMapper.map(categoryDTO, Category.class);
         Category categorySaved = categoryRepository.save(category);
-        return buildDto(categorySaved);
+        return modelMapper.map(categorySaved, CategoryDTO.class);
     }
 
     @Transactional
     public CategoryDTO update(CategoryDTO categoryDTO, Long id) {
         findById(id);
-        Category category = buildModel(categoryDTO);
+        Category category = modelMapper.map(categoryDTO, Category.class);
+
         category.setId(id);
-        CategoryDTO categorySaved = buildDto(category);
+        CategoryDTO categorySaved = modelMapper.map(category, CategoryDTO.class);
         return save(categorySaved);
     }
 
@@ -64,22 +67,6 @@ public class CategoryService {
     public void delete(Long id) {
         CategoryDTO category = findById(id);
         categoryRepository.deleteById(category.getId());
-    }
-
-    public static Category buildModel(CategoryDTO categoryDTO){
-        return Category.builder()
-                .id(categoryDTO.getId())
-                .name(categoryDTO.getName())
-                .imageUrl(categoryDTO.getImageUrl())
-                .build();
-    }
-
-    public static CategoryDTO buildDto(Category category){
-        return CategoryDTO.builder()
-                .id(category.getId())
-                .name(category.getName())
-                .imageUrl(category.getImageUrl())
-                .build();
     }
 
 }

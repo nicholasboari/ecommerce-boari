@@ -1,6 +1,6 @@
 package com.ecommerceboari.api.controller;
 
-import com.ecommerceboari.api.dto.UserResponseDTO;
+import com.ecommerceboari.api.dto.user.UserResponseDTO;
 import com.ecommerceboari.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,9 +1,11 @@
 package com.ecommerceboari.api.auth;
 
 import com.ecommerceboari.api.dto.AuthenticationDTO;
-import com.ecommerceboari.api.dto.UserLoginDTO;
-import com.ecommerceboari.api.dto.UserRegisterDTO;
+import com.ecommerceboari.api.dto.user.UserLoginDTO;
+import com.ecommerceboari.api.dto.user.UserRegisterDTO;
+import com.ecommerceboari.api.dto.user.UserRegisterResponseDTO;
 import com.ecommerceboari.api.exception.BadRequestException;
+import com.ecommerceboari.api.exception.ConflictRequestException;
 import com.ecommerceboari.api.exception.UserForbiddenRequestException;
 import com.ecommerceboari.api.exception.UserUnauthorizedRequestException;
 import com.ecommerceboari.api.jwt.JwtService;
@@ -11,7 +13,7 @@ import com.ecommerceboari.api.model.Role;
 import com.ecommerceboari.api.model.User;
 import com.ecommerceboari.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,14 +30,15 @@ import java.util.Collection;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationDTO register(UserRegisterDTO request) {
+    public UserRegisterResponseDTO register(UserRegisterDTO request) {
         // check if the email already exists
         boolean emailExist = userRepository.findByEmail(request.getEmail()).isPresent();
-        if (emailExist) throw new DataIntegrityViolationException("A user already exists with the same email!");
+        if (emailExist) throw new ConflictRequestException("A user already exists with the same email!");
 
         var user = User.builder()
                 .email(request.getEmail())
@@ -48,9 +51,10 @@ public class AuthenticationService {
                 .isActive(true)
                 .createdAt(LocalDateTime.now())
                 .build();
-        userRepository.save(user);
+        User userSaved = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationDTO.builder().token(jwtToken).build();
+        AuthenticationDTO.builder().token(jwtToken).build();
+        return modelMapper.map(userSaved, UserRegisterResponseDTO.class);
     }
 
     public AuthenticationDTO login(UserLoginDTO request) {
@@ -65,7 +69,7 @@ public class AuthenticationService {
             );
 
         } catch (BadCredentialsException e) {
-            throw new BadRequestException("Email or password is incorrect!");
+            throw new BadRequestException("Password is incorrect!");
         }
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationDTO.builder().token(jwtToken).build();

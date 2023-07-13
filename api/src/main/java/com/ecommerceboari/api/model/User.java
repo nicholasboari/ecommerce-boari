@@ -10,8 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Entity
@@ -30,6 +29,7 @@ public class User implements UserDetails {
     private String phone;
     @Email
     private String email;
+    @Column(unique = true, nullable = false)
     private String username;
     private String password;
     private boolean isActive;
@@ -38,9 +38,8 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany
-    @JoinColumn(name = "order_id")
-    private List<Order> order;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Order> order = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
