@@ -1,7 +1,9 @@
 package com.ecommerceboari.api.controller;
 
 import com.ecommerceboari.api.dto.AddressDTO;
+import com.ecommerceboari.api.dto.user.UserResponseDTO;
 import com.ecommerceboari.api.service.AddressService;
+import com.ecommerceboari.api.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import java.util.List;
 public class AddressController {
 
     private final AddressService addressService;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<Page<AddressDTO>> findPaged(Pageable pageable) {
@@ -39,13 +42,15 @@ public class AddressController {
 
     @PostMapping
     public ResponseEntity<AddressDTO> save(@Valid @RequestBody AddressDTO addressDTO) {
-        AddressDTO address = addressService.save(addressDTO);
+        UserResponseDTO userAuthenticated = userService.findUserAuthenticated();
+        AddressDTO address = addressService.save(addressDTO, userAuthenticated);
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(address);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<AddressDTO> update(@Valid @RequestBody AddressDTO addressDTO, @PathVariable Long id) {
-        AddressDTO address = addressService.update(addressDTO, id);
+        UserResponseDTO userAuthenticated = userService.findUserAuthenticated();
+        AddressDTO address = addressService.update(addressDTO, id, userAuthenticated);
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(address);
     }
 

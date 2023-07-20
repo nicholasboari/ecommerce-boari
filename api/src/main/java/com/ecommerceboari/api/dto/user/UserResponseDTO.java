@@ -1,5 +1,6 @@
 package com.ecommerceboari.api.dto.user;
 
+import com.ecommerceboari.api.model.Address;
 import com.ecommerceboari.api.model.Order;
 import com.ecommerceboari.api.model.Role;
 import lombok.AllArgsConstructor;
@@ -24,5 +25,6 @@ public class UserResponseDTO {
     private String username;
     private LocalDateTime createdAt;
     private Role role;
+    private Address address;
     private List<Order> order;
 }

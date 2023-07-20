@@ -25,6 +25,7 @@ public class UserService {
     public UserResponseDTO save(UserResponseDTO userResponseDTO) {
         User user = userRepository.findById(userResponseDTO.getId()).orElseThrow(() -> new BadRequestException("User not found"));
         user.setOrder(userResponseDTO.getOrder());
+        user.setAddress(userResponseDTO.getAddress());
         User userSaved = userRepository.save(user);
         return modelMapper.map(userSaved, UserResponseDTO.class);
 

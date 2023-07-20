@@ -35,6 +35,9 @@ public class User implements UserDetails {
     private boolean isActive;
     private LocalDateTime createdAt;
 
+    @OneToOne
+    private Address address;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

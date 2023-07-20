@@ -1,6 +1,7 @@
 package com.ecommerceboari.api.service;
 
 import com.ecommerceboari.api.dto.AddressDTO;
+import com.ecommerceboari.api.dto.user.UserResponseDTO;
 import com.ecommerceboari.api.exception.BadRequestException;
 import com.ecommerceboari.api.model.Address;
 import com.ecommerceboari.api.repository.AddressRepository;
@@ -18,6 +19,7 @@ import java.util.List;
 public class AddressService {
 
     private final AddressRepository addressRepository;
+    private final UserService userService;
     private final ModelMapper modelMapper;
 
     public List<AddressDTO> findAll() {
@@ -35,19 +37,24 @@ public class AddressService {
     }
 
     @Transactional
-    public AddressDTO save(AddressDTO addressDTO) {
+    public AddressDTO save(AddressDTO addressDTO, UserResponseDTO userResponseDTO) {
         Address address = modelMapper.map(addressDTO, Address.class);
         Address addressSaved = addressRepository.save(address);
+
+        // setting address on User
+        userResponseDTO.setAddress(addressSaved);
+        userService.save(userResponseDTO);
+
         return modelMapper.map(addressSaved, AddressDTO.class);
     }
 
     @Transactional
-    public AddressDTO update(AddressDTO addressDTO, Long id) {
-        findById(id);
+    public AddressDTO update(AddressDTO addressDTO, Long addressId, UserResponseDTO userResponseDTO) {
+        findById(addressId);
         Address address = modelMapper.map(addressDTO, Address.class);
-        address.setId(id);
+        address.setId(addressId);
         AddressDTO addressSaved = modelMapper.map(address, AddressDTO.class);
-        return save(addressSaved);
+        return save(addressSaved, userResponseDTO);
     }
 
     @Transactional
