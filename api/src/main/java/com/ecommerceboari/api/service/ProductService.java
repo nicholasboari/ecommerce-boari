@@ -1,5 +1,7 @@
 package com.ecommerceboari.api.service;
 
+import com.ecommerceboari.api.dto.BrandDTO;
+import com.ecommerceboari.api.dto.CategoryDTO;
 import com.ecommerceboari.api.dto.ProductDTO;
 import com.ecommerceboari.api.exception.BadRequestException;
 import com.ecommerceboari.api.model.Product;
@@ -15,6 +17,8 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final BrandService brandService;
+    private final CategoryService categoryService;
     private final ModelMapper modelMapper;
 
     public List<ProductDTO> findAll() {
@@ -27,6 +31,17 @@ public class ProductService {
     }
 
     public ProductDTO save(ProductDTO productDTO){
+        // getting brand and category by ID
+        Long brandId = productDTO.getBrand().getId();
+        Long categoryId = productDTO.getCategory().getId();
+
+        BrandDTO brandDTO = brandService.findById(brandId);
+        CategoryDTO categoryDTO = categoryService.findById(categoryId);
+
+        // setting brand and category
+        productDTO.setBrand(brandDTO);
+        productDTO.setCategory(categoryDTO);
+
         Product mapped = modelMapper.map(productDTO, Product.class);
         Product productSaved = productRepository.save(mapped);
         return modelMapper.map(productSaved, ProductDTO.class);

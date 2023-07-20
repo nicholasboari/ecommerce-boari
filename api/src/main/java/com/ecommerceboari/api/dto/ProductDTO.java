@@ -1,7 +1,5 @@
 package com.ecommerceboari.api.dto;
 
-import com.ecommerceboari.api.model.Brand;
-import com.ecommerceboari.api.model.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +15,6 @@ public class ProductDTO {
 
     private String name;
     private Long price;
-    private Brand brand;
-    private Category category;
+    private BrandDTO brand;
+    private CategoryDTO category;
 }
