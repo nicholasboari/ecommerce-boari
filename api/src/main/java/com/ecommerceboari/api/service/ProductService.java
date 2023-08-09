@@ -8,7 +8,10 @@ import com.ecommerceboari.api.model.Product;
 import com.ecommerceboari.api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,12 +28,29 @@ public class ProductService {
         return productRepository.findAll().stream().map(product -> modelMapper.map(product, ProductDTO.class)).toList();
     }
 
+    public Page<ProductDTO> findAllPaged(Pageable pageable) {
+        return productRepository.findAll(pageable).map(product -> modelMapper.map(product, ProductDTO.class));
+    }
+
+    public Page<ProductDTO> findAllPagedByName(String name, Pageable pageable) {
+        return productRepository.findByNameContainingIgnoreCase(name, pageable).map(product -> modelMapper.map(product, ProductDTO.class));
+    }
+
+    public Page<ProductDTO> findAllPagedByCategoryName(String name, Pageable pageable) {
+        return productRepository.findByCategoryNameContaining(name, pageable).map(product -> modelMapper.map(product, ProductDTO.class));
+    }
+
+    public Page<ProductDTO> findAllPagedByBrandName(String name, Pageable pageable) {
+        return productRepository.findByBrandNameContaining(name, pageable).map(product -> modelMapper.map(product, ProductDTO.class));
+    }
+
     public ProductDTO findById(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new BadRequestException("Product not found!"));
         return modelMapper.map(product, ProductDTO.class);
     }
 
-    public ProductDTO save(ProductDTO productDTO){
+    @Transactional
+    public ProductDTO save(ProductDTO productDTO) {
         // getting brand and category by ID
         Long brandId = productDTO.getBrand().getId();
         Long categoryId = productDTO.getCategory().getId();
@@ -45,6 +65,11 @@ public class ProductService {
         Product mapped = modelMapper.map(productDTO, Product.class);
         Product productSaved = productRepository.save(mapped);
         return modelMapper.map(productSaved, ProductDTO.class);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        productRepository.deleteById(id);
     }
 
 }
