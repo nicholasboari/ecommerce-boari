@@ -21,6 +21,7 @@ public class Product {
 
     private String name;
     private Long price;
+    private String imageUrl;
 
     @ManyToOne
     private Brand brand;

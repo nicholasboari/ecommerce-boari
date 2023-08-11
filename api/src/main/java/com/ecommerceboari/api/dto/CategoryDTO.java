@@ -15,5 +15,4 @@ public class CategoryDTO {
     private Long id;
     @Size(min = 2, max = 14, message = "size needs to be greater than 2")
     private String name;
-    private String imageUrl;
 }

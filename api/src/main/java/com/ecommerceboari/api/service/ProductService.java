@@ -4,10 +4,12 @@ import com.ecommerceboari.api.dto.BrandDTO;
 import com.ecommerceboari.api.dto.CategoryDTO;
 import com.ecommerceboari.api.dto.ProductDTO;
 import com.ecommerceboari.api.exception.BadRequestException;
+import com.ecommerceboari.api.model.Category;
 import com.ecommerceboari.api.model.Product;
 import com.ecommerceboari.api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -65,6 +67,17 @@ public class ProductService {
         Product mapped = modelMapper.map(productDTO, Product.class);
         Product productSaved = productRepository.save(mapped);
         return modelMapper.map(productSaved, ProductDTO.class);
+    }
+
+    @Transactional
+    public ProductDTO update(ProductDTO productDTO, Long id) {
+        findById(id);
+        ProductDTO build = ProductDTO.builder().build();
+
+        BeanUtils.copyProperties(productDTO, build);
+        build.setId(id);
+        save(build);
+        return build;
     }
 
     @Transactional

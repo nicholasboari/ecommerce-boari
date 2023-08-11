@@ -3,4 +3,13 @@ spring:
     active: test
 
 env:
+  secretKey: ${SECRET_KEY_JWT}
+
+aws:
+  accessKey: ${ACCESS_KEY}
   secretKey: ${SECRET_KEY}
+  region: sa-east-1
+  s3:
+    mock: true
+    buckets:
+      customer: ecommerce-boari
