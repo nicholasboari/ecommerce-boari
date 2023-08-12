@@ -1,8 +1,8 @@
 package com.ecommerceboari.api.auth;
 
 import com.ecommerceboari.api.dto.AuthenticationDTO;
-import com.ecommerceboari.api.dto.user.UserLoginDTO;
-import com.ecommerceboari.api.dto.user.UserRegisterDTO;
+import com.ecommerceboari.api.dto.user.UserLoginRequestDTO;
+import com.ecommerceboari.api.dto.user.UserRegisterRequestDTO;
 import com.ecommerceboari.api.dto.user.UserRegisterResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,13 +20,13 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserRegisterResponseDTO> register(@RequestBody UserRegisterDTO request){
+    public ResponseEntity<UserRegisterResponseDTO> register(@RequestBody UserRegisterRequestDTO request){
         UserRegisterResponseDTO user = authenticationService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(user);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationDTO> login(@RequestBody UserLoginDTO request){
+    public ResponseEntity<AuthenticationDTO> login(@RequestBody UserLoginRequestDTO request){
         return ResponseEntity.ok(authenticationService.login(request));
     }
 }

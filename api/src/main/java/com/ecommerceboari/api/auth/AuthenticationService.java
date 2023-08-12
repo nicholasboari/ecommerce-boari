@@ -1,8 +1,8 @@
 package com.ecommerceboari.api.auth;
 
 import com.ecommerceboari.api.dto.AuthenticationDTO;
-import com.ecommerceboari.api.dto.user.UserLoginDTO;
-import com.ecommerceboari.api.dto.user.UserRegisterDTO;
+import com.ecommerceboari.api.dto.user.UserLoginRequestDTO;
+import com.ecommerceboari.api.dto.user.UserRegisterRequestDTO;
 import com.ecommerceboari.api.dto.user.UserRegisterResponseDTO;
 import com.ecommerceboari.api.exception.BadRequestException;
 import com.ecommerceboari.api.exception.ConflictRequestException;
@@ -35,7 +35,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public UserRegisterResponseDTO register(UserRegisterDTO request) {
+    public UserRegisterResponseDTO register(UserRegisterRequestDTO request) {
         // check if the email already exists
         boolean emailExist = userRepository.findByEmail(request.getEmail()).isPresent();
         if (emailExist) throw new ConflictRequestException("A user already exists with the same email!");
@@ -57,7 +57,7 @@ public class AuthenticationService {
         return modelMapper.map(userSaved, UserRegisterResponseDTO.class);
     }
 
-    public AuthenticationDTO login(UserLoginDTO request) {
+    public AuthenticationDTO login(UserLoginRequestDTO request) {
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new BadRequestException("Email does not exist!"));
 
         // verify user credentials with username and password

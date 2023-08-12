@@ -1,10 +1,12 @@
-package com.ecommerceboari.api.dto;
+package com.ecommerceboari.api.dto.order;
 
+import com.ecommerceboari.api.dto.ProductOrderDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderDTO {
+public class OrderRequestDTO {
 
     private Long id;
+    private LocalDateTime moment;
     private List<ProductOrderDTO> products = new ArrayList<>();
 }

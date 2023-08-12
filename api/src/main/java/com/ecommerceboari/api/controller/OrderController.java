@@ -1,6 +1,7 @@
 package com.ecommerceboari.api.controller;
 
-import com.ecommerceboari.api.dto.OrderDTO;
+import com.ecommerceboari.api.dto.order.OrderRequestDTO;
+import com.ecommerceboari.api.dto.order.OrderResponseDTO;
 import com.ecommerceboari.api.dto.user.UserResponseDTO;
 import com.ecommerceboari.api.service.OrderService;
 import com.ecommerceboari.api.service.UserService;
@@ -20,16 +21,16 @@ public class OrderController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<OrderDTO>> findOrderByUser() {
+    public ResponseEntity<List<OrderResponseDTO>> findOrderByUser() {
         UserResponseDTO user = userService.findUserAuthenticated();
-        List<OrderDTO> order = orderService.findPaged(user);
+        List<OrderResponseDTO> order = orderService.findPaged(user);
         return ResponseEntity.ok().body(order);
     }
 
     @PostMapping
-    public ResponseEntity<OrderDTO> save(@RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<OrderResponseDTO> save(@RequestBody OrderRequestDTO orderDTO) {
         UserResponseDTO user = userService.findUserAuthenticated();
-        OrderDTO order = orderService.save(user, orderDTO);
+        OrderResponseDTO order = orderService.save(user, orderDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 }

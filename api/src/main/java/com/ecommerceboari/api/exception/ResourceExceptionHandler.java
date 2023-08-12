@@ -49,4 +49,17 @@ public class ResourceExceptionHandler {
                 .build();
         return ResponseEntity.status(status).body(error);
     }
+
+    @ExceptionHandler(AddressNullException.class)
+    public ResponseEntity<StandardError> address(AddressNullException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        StandardError error = StandardError.builder()
+                .message(e.getMessage())
+                .error("Not found")
+                .path(request.getRequestURI())
+                .status(status.value())
+                .timestamp(System.currentTimeMillis())
+                .build();
+        return ResponseEntity.status(status).body(error);
+    }
 }
