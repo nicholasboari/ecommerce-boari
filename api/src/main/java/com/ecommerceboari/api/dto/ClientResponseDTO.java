@@ -1,6 +1,5 @@
 package com.ecommerceboari.api.dto;
 
-import com.ecommerceboari.api.model.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,5 +17,5 @@ public class ClientResponseDTO {
     private String phone;
     private String email;
     private String username;
-    private Address address;
+    private AddressDTO address;
 }

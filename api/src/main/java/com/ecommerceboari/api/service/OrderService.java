@@ -29,7 +29,7 @@ public class OrderService {
     private final ModelMapper modelMapper;
 
     public List<OrderResponseDTO> findPaged(UserResponseDTO user) {
-        List<Order> orders = userService.findById(user.getId()).getOrder();
+        List<OrderResponseDTO> orders = userService.findById(user.getId()).getOrder();
         ClientResponseDTO userMapped = modelMapper.map(user, ClientResponseDTO.class);
 
         return orders.stream().map(order -> {
@@ -68,8 +68,9 @@ public class OrderService {
                 .products(new ArrayList<>(productList))
                 .build();
         Order orderSaved = orderRepository.save(order);
+        OrderResponseDTO orderMapped = modelMapper.map(orderSaved, OrderResponseDTO.class);
 
-        user.getOrder().add(orderSaved);
+        user.getOrder().add(orderMapped);
         userService.save(user);
         return orderSaved;
     }

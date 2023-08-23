@@ -35,9 +35,9 @@ class CategoryServiceTest {
 
         // create a list of category
         List<Category> categoryList = List.of(
-                new Category(1L, "Category A", "image1.png"),
-                new Category(2L, "Category B", "image2.png"),
-                new Category(3L, "Category C", "image3.png"));
+                new Category(1L, "Category A"),
+                new Category(2L, "Category B"),
+                new Category(3L, "Category C"));
 
         // create a page of category
         PageImpl<Category> categoryPage = new PageImpl<>(List.of(CategoryCreator.createValidCategory()));
@@ -57,8 +57,8 @@ class CategoryServiceTest {
 
         Assertions.assertNotNull(categoryPage);
         Assertions.assertEquals(1L, categoryPage.toList().size());
-        Assertions.assertEquals(expectedId, categoryPage.toList().get(0).id());
-        Assertions.assertEquals(expectedName, categoryPage.get().toList().get(0).name());
+        Assertions.assertEquals(expectedId, categoryPage.toList().get(0).getId());
+        Assertions.assertEquals(expectedName, categoryPage.get().toList().get(0).getName());
     }
 
     @Test
@@ -70,20 +70,20 @@ class CategoryServiceTest {
 
         Assertions.assertNotNull(categoryList);
         Assertions.assertEquals(3L, categoryList.size());
-        Assertions.assertEquals(expectedId, categoryList.get(0).id());
-        Assertions.assertEquals(expectedName, categoryList.get(0).name());
+        Assertions.assertEquals(expectedId, categoryList.get(0).getId());
+        Assertions.assertEquals(expectedName, categoryList.get(0).getName());
     }
 
     @Test
     @DisplayName("return a category when successful")
     void findById_ShouldReturnCategory_WhenSuccessful() {
         CategoryDTO category = categoryService.findById(1L);
-        String expectedName = category.name();
-        Long expectedId = category.id();
+        String expectedName = category.getName();
+        Long expectedId = category.getId();
 
         Assertions.assertNotNull(category);
-        Assertions.assertEquals(expectedId, category.id());
-        Assertions.assertEquals(expectedName, category.name());
+        Assertions.assertEquals(expectedId, category.getId());
+        Assertions.assertEquals(expectedName, category.getName());
     }
 
 }

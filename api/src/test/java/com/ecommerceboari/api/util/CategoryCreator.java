@@ -8,7 +8,6 @@ public class CategoryCreator {
         return Category.builder()
                 .id(1L)
                 .name("Category A")
-                .imageUrl("imageA.png")
                 .build();
     }
 }

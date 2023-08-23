@@ -38,11 +38,14 @@ public class AddressService {
 
     @Transactional
     public AddressDTO save(AddressDTO addressDTO, UserResponseDTO userResponseDTO) {
+        if(userResponseDTO.getAddress() != null) throw new BadRequestException("Address already exist");
+
+        // setting address on User
+        userResponseDTO.setAddress(addressDTO);
+
         Address address = modelMapper.map(addressDTO, Address.class);
         Address addressSaved = addressRepository.save(address);
 
-        // setting address on User
-        userResponseDTO.setAddress(addressSaved);
         userService.save(userResponseDTO);
 
         return modelMapper.map(addressSaved, AddressDTO.class);
