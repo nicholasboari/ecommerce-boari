@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,20 +44,23 @@ public class BrandController {
         return ResponseEntity.ok().body(brand);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping
     public ResponseEntity<BrandDTO> save(@Valid @RequestBody BrandDTO brandDTO) {
         BrandDTO brand = brandService.save(brandDTO);
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(brand);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PutMapping("/{id}")
     public ResponseEntity<BrandDTO> update(@Valid @RequestBody BrandDTO brandDTO, @PathVariable Long id){
         BrandDTO brandUpdated = brandService.update(brandDTO, id);
         return ResponseEntity.ok().body(brandUpdated);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<BrandDTO> save(@PathVariable Long id) {
+    public ResponseEntity<BrandDTO>  save(@PathVariable Long id) {
         brandService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

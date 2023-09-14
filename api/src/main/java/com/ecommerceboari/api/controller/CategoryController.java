@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,18 +43,21 @@ public class CategoryController {
         return ResponseEntity.ok().body(category);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping
     public ResponseEntity<CategoryDTO> save(@RequestBody CategoryDTO categoryDTO) {
         CategoryDTO category = categoryService.save(categoryDTO);
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(category);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDTO> update(@RequestBody CategoryDTO categoryDTO, @PathVariable Long id) {
         CategoryDTO categoryUpdated = categoryService.update(categoryDTO, id);
         return ResponseEntity.ok().body(categoryUpdated);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<CategoryDTO> save(@PathVariable Long id) {
         categoryService.delete(id);

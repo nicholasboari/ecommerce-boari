@@ -3,7 +3,6 @@ package com.ecommerceboari.api.service;
 import com.ecommerceboari.api.auth.AuthenticationService;
 import com.ecommerceboari.api.dto.user.UserResponseDTO;
 import com.ecommerceboari.api.exception.BadRequestException;
-import com.ecommerceboari.api.model.Address;
 import com.ecommerceboari.api.model.Order;
 import com.ecommerceboari.api.model.User;
 import com.ecommerceboari.api.repository.UserRepository;
@@ -27,13 +26,11 @@ public class UserService {
     public UserResponseDTO save(UserResponseDTO userResponseDTO) {
         User user = userRepository.findById(userResponseDTO.getId()).orElseThrow(() -> new BadRequestException("User not found"));
 
-        userResponseDTO.getOrder().stream().map(order -> {
+        userResponseDTO.getOrder().forEach(order -> {
             Order mapped = modelMapper.map(order, Order.class);
-            return user.getOrder().add(mapped);
+            user.getOrder().add(mapped);
         });
 
-        Address address = modelMapper.map(userResponseDTO.getAddress(), Address.class);
-        user.setAddress(address);
         User userSaved = userRepository.save(user);
         return modelMapper.map(userSaved, UserResponseDTO.class);
     }
