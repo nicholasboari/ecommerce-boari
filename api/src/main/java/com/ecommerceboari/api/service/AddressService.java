@@ -40,9 +40,6 @@ public class AddressService {
     public AddressDTO save(AddressDTO addressDTO, UserResponseDTO userResponseDTO) {
         if(userResponseDTO.getAddress() != null) throw new BadRequestException("Address already exist");
 
-        // setting address on User
-        userResponseDTO.setAddress(addressDTO);
-
         Address address = modelMapper.map(addressDTO, Address.class);
         Address addressSaved = addressRepository.save(address);
 
