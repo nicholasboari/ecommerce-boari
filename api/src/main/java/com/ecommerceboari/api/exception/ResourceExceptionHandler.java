@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-
 @ControllerAdvice
 public class ResourceExceptionHandler {
 
@@ -56,6 +55,32 @@ public class ResourceExceptionHandler {
         StandardError error = StandardError.builder()
                 .message(e.getMessage())
                 .error("Not found")
+                .path(request.getRequestURI())
+                .status(status.value())
+                .timestamp(System.currentTimeMillis())
+                .build();
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(EmailNotFound.class)
+    public ResponseEntity<StandardError> email(EmailNotFound e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        StandardError error = StandardError.builder()
+                .message(e.getMessage())
+                .error("Not found")
+                .path(request.getRequestURI())
+                .status(status.value())
+                .timestamp(System.currentTimeMillis())
+                .build();
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(UserUnauthorizedRequestException.class)
+    public ResponseEntity<StandardError> unauthorized(UserUnauthorizedRequestException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        StandardError error = StandardError.builder()
+                .message(e.getMessage())
+                .error("Unauthorized")
                 .path(request.getRequestURI())
                 .status(status.value())
                 .timestamp(System.currentTimeMillis())
