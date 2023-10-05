@@ -71,7 +71,7 @@ public class OrderService {
         OrderResponseDTO orderMapped = modelMapper.map(orderSaved, OrderResponseDTO.class);
 
         user.getOrder().add(orderMapped);
-        userService.save(user);
+        userService.updateUserOrder(user);
         return orderSaved;
     }
 }

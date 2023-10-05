@@ -37,7 +37,7 @@ public class User implements UserDetails {
     private boolean isActive;
     private LocalDateTime createdAt;
 
-    @OneToOne(cascade=CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
     @Enumerated(EnumType.STRING)

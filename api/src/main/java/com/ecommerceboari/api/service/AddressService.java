@@ -1,18 +1,20 @@
 package com.ecommerceboari.api.service;
 
-import com.ecommerceboari.api.dto.AddressDTO;
-import com.ecommerceboari.api.dto.user.UserResponseDTO;
-import com.ecommerceboari.api.exception.BadRequestException;
-import com.ecommerceboari.api.model.Address;
-import com.ecommerceboari.api.repository.AddressRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.ecommerceboari.api.dto.AddressDTO;
+import com.ecommerceboari.api.dto.user.UserResponseDTO;
+import com.ecommerceboari.api.exception.BadRequestException;
+import com.ecommerceboari.api.model.Address;
+import com.ecommerceboari.api.repository.AddressRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -32,18 +34,21 @@ public class AddressService {
     }
 
     public AddressDTO findById(Long id) {
-        Address address = addressRepository.findById(id).orElseThrow(() -> new BadRequestException("Address not found!"));
+        Address address = addressRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Address not found!"));
         return modelMapper.map(address, AddressDTO.class);
     }
 
-    @Transactional
     public AddressDTO save(AddressDTO addressDTO, UserResponseDTO userResponseDTO) {
-        if(userResponseDTO.getAddress() != null) throw new BadRequestException("Address already exist");
+        if (userResponseDTO.getAddress() != null) {
+            throw new BadRequestException("Address already exist");
+        }
 
         Address address = modelMapper.map(addressDTO, Address.class);
         Address addressSaved = addressRepository.save(address);
+        userResponseDTO.setAddress(modelMapper.map(addressSaved, AddressDTO.class));
 
-        userService.save(userResponseDTO);
+        userService.updateUserAddress(userResponseDTO);
 
         return modelMapper.map(addressSaved, AddressDTO.class);
     }

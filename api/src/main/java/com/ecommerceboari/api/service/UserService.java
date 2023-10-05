@@ -1,5 +1,7 @@
 package com.ecommerceboari.api.service;
 
+import com.ecommerceboari.api.model.Order;
+import com.ecommerceboari.api.repository.AddressRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ecommerceboari.api.auth.AuthenticationService;
 import com.ecommerceboari.api.dto.user.UserResponseDTO;
 import com.ecommerceboari.api.exception.BadRequestException;
-import com.ecommerceboari.api.model.Order;
+import com.ecommerceboari.api.model.Address;
 import com.ecommerceboari.api.model.User;
 import com.ecommerceboari.api.repository.UserRepository;
 
@@ -19,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AddressRepository addressRepository;
     private final AuthenticationService authenticationService;
     private final ModelMapper modelMapper;
 
@@ -32,7 +35,27 @@ public class UserService {
         return modelMapper.map(user, UserResponseDTO.class);
     }
 
-    public UserResponseDTO save(UserResponseDTO userResponseDTO) {
+    public void updateUserAddress(UserResponseDTO userResponseDTO) {
+        User user = userRepository.findById(userResponseDTO.getId())
+                .orElseThrow(() -> new BadRequestException("User not found"));
+
+        if (userResponseDTO.getAddress() != null) {
+            Address address = userResponseDTO.getAddress().getId() != null ?
+                    addressRepository.findById(userResponseDTO
+                                    .getAddress()
+                                    .getId()).orElseThrow(() -> new BadRequestException("Address not found")) : null;
+            if (address != null) {
+                user.setAddress(address);
+            } else {
+                Address newAddress = modelMapper.map(userResponseDTO.getAddress(), Address.class);
+                user.setAddress(newAddress);
+            }
+        }
+
+        userRepository.save(user);
+    }
+
+    public void updateUserOrder(UserResponseDTO userResponseDTO) {
         User user = userRepository.findById(userResponseDTO.getId())
                 .orElseThrow(() -> new BadRequestException("User not found"));
 
@@ -41,12 +64,13 @@ public class UserService {
             user.getOrder().add(mapped);
         });
 
-        User userSaved = userRepository.save(user);
-        return modelMapper.map(userSaved, UserResponseDTO.class);
+        userRepository.save(user);
     }
 
     public UserResponseDTO findUserAuthenticated() {
         User user = authenticationService.returnUserAuthenticated();
         return modelMapper.map(user, UserResponseDTO.class);
     }
+
+
 }
