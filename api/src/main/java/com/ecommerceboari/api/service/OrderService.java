@@ -1,6 +1,5 @@
 package com.ecommerceboari.api.service;
 
-import com.ecommerceboari.api.dto.ClientResponseDTO;
 import com.ecommerceboari.api.dto.ProductDTO;
 import com.ecommerceboari.api.dto.ProductOrderDTO;
 import com.ecommerceboari.api.dto.order.OrderRequestDTO;
@@ -28,15 +27,8 @@ public class OrderService {
     private final ProductService productService;
     private final ModelMapper modelMapper;
 
-    public List<OrderResponseDTO> findPaged(UserResponseDTO user) {
-        List<OrderResponseDTO> orders = userService.findById(user.getId()).getOrder();
-        ClientResponseDTO userMapped = modelMapper.map(user, ClientResponseDTO.class);
-
-        return orders.stream().map(order -> {
-            OrderResponseDTO mapped = modelMapper.map(order, OrderResponseDTO.class);
-            mapped.setClient(userMapped);
-            return mapped;
-        }).toList();
+    public List<OrderResponseDTO> findOrdersByUser(UserResponseDTO user) {
+        return userService.findById(user.getId()).getOrder();
     }
 
     @Transactional
@@ -57,10 +49,7 @@ public class OrderService {
         orderSaved.setMoment(LocalDateTime.now());
         orderSaved.setTotal(total);
 
-        ClientResponseDTO userMapped = modelMapper.map(user, ClientResponseDTO.class);
-        OrderResponseDTO orderMapped = modelMapper.map(orderSaved, OrderResponseDTO.class);
-        orderMapped.setClient(userMapped);
-        return orderMapped;
+        return modelMapper.map(orderSaved, OrderResponseDTO.class);
     }
 
     private Order createOrderAndAssociateWithUser(UserResponseDTO user, List<Product> productList) {

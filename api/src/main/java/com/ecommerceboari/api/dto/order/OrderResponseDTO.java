@@ -1,6 +1,5 @@
 package com.ecommerceboari.api.dto.order;
 
-import com.ecommerceboari.api.dto.ClientResponseDTO;
 import com.ecommerceboari.api.dto.ProductDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +19,5 @@ public class OrderResponseDTO {
     private Long id;
     private Double total;
     private LocalDateTime moment;
-    private ClientResponseDTO client;
     private List<ProductDTO> products = new ArrayList<>();
 }

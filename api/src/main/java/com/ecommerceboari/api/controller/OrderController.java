@@ -24,7 +24,7 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<OrderResponseDTO>> findOrderByUser() {
         UserResponseDTO user = userService.findUserAuthenticated();
-        List<OrderResponseDTO> order = orderService.findPaged(user);
+        List<OrderResponseDTO> order = orderService.findOrdersByUser(user);
         return ResponseEntity.ok().body(order);
     }
 

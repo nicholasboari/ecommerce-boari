@@ -22,7 +22,6 @@ public class Order {
     private Double total;
     private LocalDateTime moment;
 
-    @Setter(AccessLevel.NONE)
     @ManyToMany
     @JoinTable(
             name = "tb_order_product",
