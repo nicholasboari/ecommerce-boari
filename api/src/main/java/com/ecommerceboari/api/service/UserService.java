@@ -12,6 +12,8 @@ import com.ecommerceboari.api.repository.AddressRepository;
 import com.ecommerceboari.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
     private final AuthenticationService authenticationService;
@@ -52,7 +55,8 @@ public class UserService {
             }
         }
 
-        userRepository.save(user);
+        User userSaved = userRepository.save(user);
+        logger.info("Updating {} into the database", userSaved);
     }
 
     public void updateUserOrder(UserResponseDTO userResponseDTO) {
@@ -71,7 +75,9 @@ public class UserService {
             Product product = modelMapper.map(productDTO, Product.class);
             user.getOrder().get(lastIndex).getProducts().add(product);
         }
-        userRepository.save(user);
+
+        User userSaved = userRepository.save(user);
+        logger.info("Updating {} into the database", userSaved);
     }
 
     public UserResponseDTO findUserAuthenticated() {

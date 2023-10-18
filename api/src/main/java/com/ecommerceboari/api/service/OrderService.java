@@ -11,6 +11,8 @@ import com.ecommerceboari.api.model.Product;
 import com.ecommerceboari.api.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderService {
 
+    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
     private final UserService userService;
     private final ProductService productService;
@@ -49,6 +52,7 @@ public class OrderService {
         orderSaved.setMoment(LocalDateTime.now());
         orderSaved.setTotal(total);
 
+        logger.info("Inserting {} to the database", orderSaved);
         return modelMapper.map(orderSaved, OrderResponseDTO.class);
     }
 

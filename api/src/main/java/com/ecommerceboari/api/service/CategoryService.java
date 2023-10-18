@@ -6,6 +6,8 @@ import com.ecommerceboari.api.model.Category;
 import com.ecommerceboari.api.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryService {
 
+    private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
 
@@ -50,6 +53,8 @@ public class CategoryService {
 
         Category category = modelMapper.map(categoryDTO, Category.class);
         Category categorySaved = categoryRepository.save(category);
+
+        logger.info("Inserting {} to the database", categorySaved);
         return modelMapper.map(categorySaved, CategoryDTO.class);
     }
 
@@ -67,6 +72,7 @@ public class CategoryService {
     public void delete(Long id) {
         CategoryDTO category = findById(id);
         categoryRepository.deleteById(category.getId());
+        logger.info("Object deleted from the database, ID: {}", id);
     }
 
 }

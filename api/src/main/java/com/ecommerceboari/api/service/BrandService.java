@@ -6,6 +6,8 @@ import com.ecommerceboari.api.model.Brand;
 import com.ecommerceboari.api.repository.BrandRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BrandService {
 
+    private static final Logger logger = LoggerFactory.getLogger(BrandService.class);
     private final BrandRepository brandRepository;
     private final ModelMapper modelMapper;
 
@@ -49,6 +52,8 @@ public class BrandService {
 
         Brand brand = modelMapper.map(brandDTO, Brand.class);
         Brand brandSaved = brandRepository.save(brand);
+
+        logger.info("Inserting {} to the database", brandSaved);
         return modelMapper.map(brandSaved, BrandDTO.class);
     }
 
@@ -65,6 +70,7 @@ public class BrandService {
     public void delete(Long id) {
         BrandDTO brand = findById(id);
         brandRepository.deleteById(brand.getId());
+        logger.info("Object deleted from the database, ID: {}", id);
     }
 
 }

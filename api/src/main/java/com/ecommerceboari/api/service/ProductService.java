@@ -8,6 +8,8 @@ import com.ecommerceboari.api.model.Product;
 import com.ecommerceboari.api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
     private final ProductRepository productRepository;
     private final BrandService brandService;
     private final CategoryService categoryService;
@@ -65,6 +68,7 @@ public class ProductService {
 
         Product mapped = modelMapper.map(productDTO, Product.class);
         Product productSaved = productRepository.save(mapped);
+        logger.info("Inserting {} into the database", productSaved);
         return modelMapper.map(productSaved, ProductDTO.class);
     }
 
@@ -82,6 +86,7 @@ public class ProductService {
     @Transactional
     public void delete(Long id) {
         productRepository.deleteById(id);
+        logger.info("Object deleted from the database, ID: {}", id);
     }
 
 }
