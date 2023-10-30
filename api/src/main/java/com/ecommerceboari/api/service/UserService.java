@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
     private final AuthenticationService authenticationService;
@@ -43,10 +43,9 @@ public class UserService {
                 .orElseThrow(() -> new BadRequestException("User not found"));
 
         if (userResponseDTO.getAddress() != null) {
-            Address address = userResponseDTO.getAddress().getId() != null ?
-                    addressRepository.findById(userResponseDTO
-                            .getAddress()
-                            .getId()).orElseThrow(() -> new BadRequestException("Address not found")) : null;
+            Address address = userResponseDTO.getAddress().getId() != null ? addressRepository.findById(userResponseDTO
+                    .getAddress()
+                    .getId()).orElseThrow(() -> new BadRequestException("Address not found")) : null;
             if (address != null) {
                 user.setAddress(address);
             } else {
@@ -56,7 +55,7 @@ public class UserService {
         }
 
         User userSaved = userRepository.save(user);
-        logger.info("Updating {} into the database", userSaved);
+        LOGGER.info("Updating {} into the database", userSaved);
     }
 
     public void updateUserOrder(UserResponseDTO userResponseDTO) {
@@ -77,7 +76,7 @@ public class UserService {
         }
 
         User userSaved = userRepository.save(user);
-        logger.info("Updating {} into the database", userSaved);
+        LOGGER.info("Updating {} into the database", userSaved);
     }
 
     public UserResponseDTO findUserAuthenticated() {

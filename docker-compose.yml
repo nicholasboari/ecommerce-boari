@@ -19,16 +19,17 @@ services:
     networks:
       - ecommerce-boari-network
   ecommerce-boari:
-    image: ecommerce-boari
+    image: nicholasboari/ecommerce-boari
     restart: always
     build: ./api
     working_dir: /ecommerce-boari-api
     environment:
       TZ: America/Sao_Paulo
-      SPRING.DATASOUCE.URL: jdbc:mysql://db:3308/ecommerce_boari?createDatabaseIfNotExist=true
-      SPRING.DATASOUCE.USERNAME: root
-      SPRING.DATASOUCE.PASSWORD: root
+      SPRING.DATASOURCE.URL: ${DATASOURCE_URL}
+      SPRING.DATASOURCE.USERNAME: ${DATASOURCE_USERNAME}
+      SPRING.DATASOURCE.PASSWORD: ${DATASOURCE_PASSWORD}
       SECRET_KEY_JWT: ${SECRET_KEY_JWT}
+      PROFILE_TYPE: ${PROFILE_TYPE}
     ports:
       - "8090:8090"
     command: mvn spring-boot:run

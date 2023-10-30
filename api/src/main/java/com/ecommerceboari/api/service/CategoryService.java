@@ -1,10 +1,7 @@
 package com.ecommerceboari.api.service;
 
-import com.ecommerceboari.api.dto.CategoryDTO;
-import com.ecommerceboari.api.exception.BadRequestException;
-import com.ecommerceboari.api.model.Category;
-import com.ecommerceboari.api.repository.CategoryRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,18 +11,24 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.ecommerceboari.api.dto.CategoryDTO;
+import com.ecommerceboari.api.exception.BadRequestException;
+import com.ecommerceboari.api.model.Category;
+import com.ecommerceboari.api.repository.CategoryRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CategoryService.class);
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
 
     public List<CategoryDTO> findAll() {
-        return categoryRepository.findAll().stream().map(category -> modelMapper.map(category, CategoryDTO.class)).toList();
+        return categoryRepository.findAll().stream().map(category -> modelMapper.map(category, CategoryDTO.class))
+                .toList();
     }
 
     public Page<CategoryDTO> findPaged(Pageable pageable) {
@@ -34,7 +37,8 @@ public class CategoryService {
     }
 
     public CategoryDTO findById(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new BadRequestException("Category not found"));
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Category not found"));
         return modelMapper.map(category, CategoryDTO.class);
     }
 
@@ -42,7 +46,6 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findByNameContaining(name);
         return categories.stream().map(category -> modelMapper.map(category, CategoryDTO.class)).toList();
     }
-
 
     @Transactional
     public CategoryDTO save(CategoryDTO categoryDTO) {
@@ -54,7 +57,7 @@ public class CategoryService {
         Category category = modelMapper.map(categoryDTO, Category.class);
         Category categorySaved = categoryRepository.save(category);
 
-        logger.info("Inserting {} to the database", categorySaved);
+        LOGGER.info("Inserting {} to the database", categorySaved);
         return modelMapper.map(categorySaved, CategoryDTO.class);
     }
 
@@ -72,7 +75,7 @@ public class CategoryService {
     public void delete(Long id) {
         CategoryDTO category = findById(id);
         categoryRepository.deleteById(category.getId());
-        logger.info("Object deleted from the database, ID: {}", id);
+        LOGGER.info("Object deleted from the database, ID: {}", id);
     }
 
 }

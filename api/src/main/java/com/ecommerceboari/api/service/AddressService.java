@@ -1,11 +1,7 @@
 package com.ecommerceboari.api.service;
 
-import com.ecommerceboari.api.dto.AddressDTO;
-import com.ecommerceboari.api.dto.user.UserResponseDTO;
-import com.ecommerceboari.api.exception.BadRequestException;
-import com.ecommerceboari.api.model.Address;
-import com.ecommerceboari.api.repository.AddressRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,13 +10,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.ecommerceboari.api.dto.AddressDTO;
+import com.ecommerceboari.api.dto.user.UserResponseDTO;
+import com.ecommerceboari.api.exception.BadRequestException;
+import com.ecommerceboari.api.model.Address;
+import com.ecommerceboari.api.repository.AddressRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class AddressService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AddressService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AddressService.class);
     private final AddressRepository addressRepository;
     private final UserService userService;
     private final ModelMapper modelMapper;
@@ -51,7 +53,7 @@ public class AddressService {
 
         userService.updateUserAddress(userResponseDTO);
 
-        logger.info("Inserting {} to the database", addressSaved);
+        LOGGER.info("Inserting {} to the database", addressSaved);
         return modelMapper.map(addressSaved, AddressDTO.class);
     }
 
@@ -68,7 +70,7 @@ public class AddressService {
     public void delete(Long id) {
         AddressDTO address = findById(id);
         addressRepository.deleteById(address.getId());
-        logger.info("Object deleted from the database, ID: {}", id);
+        LOGGER.info("Object deleted from the database, ID: {}", id);
     }
 
 }
