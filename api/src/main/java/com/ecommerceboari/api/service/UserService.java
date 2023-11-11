@@ -1,7 +1,6 @@
 package com.ecommerceboari.api.service;
 
 import com.ecommerceboari.api.auth.AuthenticationService;
-import com.ecommerceboari.api.dto.ProductDTO;
 import com.ecommerceboari.api.dto.user.UserResponseDTO;
 import com.ecommerceboari.api.exception.BadRequestException;
 import com.ecommerceboari.api.model.Address;
@@ -17,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -61,22 +63,25 @@ public class UserService {
     public void updateUserOrder(UserResponseDTO userResponseDTO) {
         User user = userRepository.findById(userResponseDTO.getId())
                 .orElseThrow(() -> new BadRequestException("User not found"));
+        try {
+            userResponseDTO.getOrder().forEach(orderDTO -> {
+                Order orderMapped = modelMapper.map(orderDTO, Order.class);
+                List<Product> products = new ArrayList<>();
 
-        user.getOrder().clear();
+                orderDTO.getProducts().forEach(productDTO -> {
+                    Product product = modelMapper.map(productDTO, Product.class);
+                    products.add(product);
+                });
 
-        userResponseDTO.getOrder().forEach(order -> {
-            Order orderMapped = modelMapper.map(order, Order.class);
-            user.getOrder().add(orderMapped);
-        });
+                orderMapped.setProducts(products);
+                user.getOrder().add(orderMapped);
+            });
 
-        int lastIndex = userResponseDTO.getOrder().size() - 1;
-        for (ProductDTO productDTO : userResponseDTO.getOrder().get(lastIndex).getProducts()) {
-            Product product = modelMapper.map(productDTO, Product.class);
-            user.getOrder().get(lastIndex).getProducts().add(product);
+            User userSaved = userRepository.save(user);
+            LOGGER.info("Updating {} into the database", userSaved);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        User userSaved = userRepository.save(user);
-        LOGGER.info("Updating {} into the database", userSaved);
     }
 
     public UserResponseDTO findUserAuthenticated() {

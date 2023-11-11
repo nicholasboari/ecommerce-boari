@@ -5,6 +5,7 @@ import com.ecommerceboari.api.model.Product;
 import com.ecommerceboari.api.repository.ProductRepository;
 import com.ecommerceboari.api.util.BrandCreator;
 import com.ecommerceboari.api.util.CategoryCreator;
+import com.ecommerceboari.api.util.ProductCreator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,52 +35,41 @@ class ProductServiceTest {
     private ProductRepository productRepository;
 
     @Mock
+    private ModelMapper modelMapper;
+
+    @Mock
     private BrandService brandService;
 
     @Mock
     private CategoryService categoryService;
 
-    @Mock
-    private ModelMapper modelMapper;
-
-    List<ProductDTO> productDTOList;
-    Page<Product> productPage;
-    ProductDTO productDTO = new ProductDTO();
-    Product product = new Product();
+    private List<ProductDTO> productDTOList;
+    private Page<Product> productPage;
+    private ProductDTO productDTO;
+    private Product product = new Product();
+    private List<Product> productList;
 
     @BeforeEach
     public void setup() {
-        productDTO.setName("Product A");
-        productDTO.setName("New Product");
-        productDTO.setBrand(BrandCreator.createValidBrandDTO());
-        productDTO.setCategory(CategoryCreator.createValidCategoryDTO());
+        productDTO = ProductCreator.createValidProductDTO();
 
-        productPage = new PageImpl<>(List.of(
-                new Product(1L, "Product A", 100L, "image1.png", BrandCreator.createValidBrand(), CategoryCreator.createValidCategory())
-        ));
+        // create a list of product
+        productList = List.of(ProductCreator.createValidProduct());
 
-        List<Product> productList = List.of(
-                new Product(1L, "Product A", 100L, "image1.png", BrandCreator.createValidBrand(), CategoryCreator.createValidCategory()),
-                new Product(2L, "Product B", 200L, "image2.png", BrandCreator.createValidBrand(), CategoryCreator.createValidCategory()),
-                new Product(3L, "Product C", 300L, "image3png", BrandCreator.createValidBrand(), CategoryCreator.createValidCategory())
-        );
+        // create a page of product
+        productPage = new PageImpl<>(List.of(ProductCreator.createValidProduct()));
 
         productDTOList = productList.stream().map(product -> modelMapper.map(product, ProductDTO.class)).toList();
 
-        Mockito.when(productRepository.findAll()).thenReturn(productList);
-        Mockito.when(modelMapper.map(Mockito.any(), Mockito.eq(ProductDTO.class))).thenReturn(productDTO);
-        Mockito.when(productRepository.findAll(ArgumentMatchers.any(Pageable.class))).thenReturn(productPage);
-        Mockito.when(productRepository.findByNameContainingIgnoreCase(ArgumentMatchers.anyString(), ArgumentMatchers.any(Pageable.class))).thenReturn(productPage);
-        Mockito.when(productRepository.findByCategoryNameContaining(ArgumentMatchers.anyString(), ArgumentMatchers.any(Pageable.class))).thenReturn(productPage);
-        Mockito.when(modelMapper.map(productDTO, Product.class)).thenReturn(product);
-        Mockito.when(brandService.findById(Mockito.anyLong())).thenReturn(BrandCreator.createValidBrandDTO());
-        Mockito.when(categoryService.findById(Mockito.anyLong())).thenReturn(CategoryCreator.createValidCategoryDTO());
-        Mockito.when(productRepository.save(product)).thenReturn(product);
+        Mockito.when(modelMapper.map(Mockito.any(Product.class), Mockito.eq(ProductDTO.class))).thenReturn(productDTO);
+        Mockito.when(modelMapper.map(Mockito.any(ProductDTO.class), Mockito.eq(Product.class))).thenReturn(product);
     }
 
     @Test
-    @DisplayName("Return a list of products when findAll is called")
-    void findAll_ShouldReturnListOfProducts() {
+    @DisplayName("Return a list of products when successful")
+    void findAll_ShouldReturnListOfProducts_WhenSuccessful() {
+        Mockito.when(productRepository.findAll()).thenReturn(productList);
+
         List<ProductDTO> result = productService.findAll();
 
         Assertions.assertNotNull(result);
@@ -87,8 +77,10 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("Return a page of products when findAllPaged is called")
-    void findAllPaged_ShouldReturnPageOfProducts() {
+    @DisplayName("Return a page of products when successful")
+    void findAllPaged_ShouldReturnPageOfProducts_WhenSuccessful() {
+        Mockito.when(productRepository.findAll(ArgumentMatchers.any(Pageable.class))).thenReturn(productPage);
+
         Page<ProductDTO> result = productService.findAllPaged(PageRequest.of(0, 10));
 
         Assertions.assertNotNull(result);
@@ -96,8 +88,12 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("Return a page of products by name when findAllPagedByName is called")
-    void findAllPagedByName_ShouldReturnPageOfProductsByName() {
+    @DisplayName("Return a page of products by name when successful")
+    void findAllPagedByName_ShouldReturnPageOfProductsByName_WhenSuccessful() {
+        Mockito.when(productRepository.findByNameContainingIgnoreCase(
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.any(Pageable.class))).thenReturn(productPage);
+
         Page<ProductDTO> result = productService.findAllPagedByName("Product A", PageRequest.of(0, 10));
 
         Assertions.assertNotNull(result);
@@ -105,8 +101,9 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("Return a page of products by category name when findAllPagedByCategoryName is called")
-    void findAllPagedByCategoryName_ShouldReturnPageOfProductsByCategoryName() {
+    @DisplayName("Return a page of products by category name when successful")
+    void findAllPagedByCategoryName_ShouldReturnPageOfProductsByCategoryName_WhenSuccessful() {
+        Mockito.when(productRepository.findByCategoryNameContaining(ArgumentMatchers.anyString(), ArgumentMatchers.any(Pageable.class))).thenReturn(productPage);
         Page<ProductDTO> result = productService.findAllPagedByCategoryName("Category A", PageRequest.of(0, 10));
 
         Assertions.assertNotNull(result);
@@ -114,17 +111,35 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("Save a new product when save is called")
-    void save_ShouldSaveNewProduct() {
-        ProductDTO savedProduct = productService.save(productDTO);
+    @DisplayName("Return a product when ID exists")
+    void findById_ShouldReturnCategory_WhenSuccessful() {
+        Mockito.when(productRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(ProductCreator.createValidProduct()));
 
-        Assertions.assertNotNull(savedProduct);
-        Assertions.assertEquals("New Product", savedProduct.getName());
+        ProductDTO product = productService.findById(1L);
+        String expectedName = product.getName();
+        Long expectedId = product.getId();
+
+        Assertions.assertNotNull(product);
+        Assertions.assertEquals(expectedId, product.getId());
+        Assertions.assertEquals(expectedName, product.getName());
     }
 
     @Test
-    @DisplayName("Delete a product when delete is called")
-    void delete_ShouldDeleteProduct() {
+    @DisplayName("Save a new product when ID null")
+    void save_ShouldSaveNewProduct_WhenIdIsNull() {
+        Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(ProductCreator.createValidProduct());
+        Mockito.when(brandService.findById(Mockito.anyLong())).thenReturn(BrandCreator.createValidBrandDTO());
+        Mockito.when(categoryService.findById(Mockito.anyLong())).thenReturn(CategoryCreator.createValidCategoryDTO());
+
+        ProductDTO savedProduct = productService.save(productDTO);
+
+        Assertions.assertNotNull(savedProduct);
+        Assertions.assertEquals("Iphone X", savedProduct.getName());
+    }
+
+    @Test
+    @DisplayName("Delete a product when ID exists")
+    void delete_ShouldDeleteProduct_WhenIdExists() {
         Long productId = 1L;
         Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(product));
         Mockito.doNothing().when(productRepository).deleteById(productId);

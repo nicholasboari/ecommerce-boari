@@ -36,37 +36,32 @@ class CategoryServiceTest {
     @Mock
     private ModelMapper modelMapper;
 
+    private List<Category> categoryList;
+    private PageImpl<Category> categoryPage;
+    private Category category;
+    private CategoryDTO categoryDTO;
+
     @BeforeEach
     public void setup() {
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setId(1L);
-        categoryDTO.setName("Category A");
-
-        List<Category> existingCategories = Collections.singletonList(new Category(1L, "Category A"));
+        categoryDTO = CategoryCreator.createValidCategoryDTO();
+        category = CategoryCreator.createValidCategory();
 
         // create a list of category
-        List<Category> categoryList = List.of(
-                new Category(1L, "Category A"),
-                new Category(2L, "Category B"),
-                new Category(3L, "Category C"));
+        categoryList = List.of(CategoryCreator.createValidCategory());
 
         // create a page of category
-        PageImpl<Category> categoryPage = new PageImpl<>(List.of(CategoryCreator.createValidCategory()));
+        categoryPage = new PageImpl<>(List.of(CategoryCreator.createValidCategory()));
 
-        Mockito.when(categoryRepository.findAll()).thenReturn(categoryList);
-        Mockito.when(categoryRepository.findAll(ArgumentMatchers.any(PageRequest.class))).thenReturn(categoryPage);
-        Mockito.when(categoryRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(CategoryCreator.createValidCategory()));
-        Mockito.when(categoryRepository.findByNameContaining(ArgumentMatchers.anyString())).thenReturn(categoryList);
-        Mockito.when(modelMapper.map(Mockito.any(Category.class), Mockito.eq(CategoryDTO.class)))
-                .thenReturn(categoryDTO);
         Mockito.when(categoryRepository.findByName("New Category")).thenReturn(Collections.emptyList());
+        Mockito.when(modelMapper.map(Mockito.any(Category.class), Mockito.eq(CategoryDTO.class))).thenReturn(categoryDTO);
         Mockito.when(modelMapper.map(Mockito.any(CategoryDTO.class), Mockito.eq(Category.class))).thenReturn(CategoryCreator.createValidCategory());
-        Mockito.when(categoryRepository.findByName("Category A")).thenReturn(existingCategories);
     }
 
     @Test
-    @DisplayName("return a page of category when successful")
-    void findAll_ShouldReturnAPageOfCategory_WhenSuccessful() {
+    @DisplayName("Return a page of categories when successful")
+    void findAll_ShouldReturnAPageOfCategories_WhenSuccessful() {
+        Mockito.when(categoryRepository.findAll(ArgumentMatchers.any(PageRequest.class))).thenReturn(categoryPage);
+
         Page<CategoryDTO> categoryPage = categoryService.findPaged(PageRequest.of(1, 1));
         String expectedName = CategoryCreator.createValidCategory().getName();
         Long expectedId = CategoryCreator.createValidCategory().getId();
@@ -78,21 +73,25 @@ class CategoryServiceTest {
     }
 
     @Test
-    @DisplayName("return a list of categories when successful")
+    @DisplayName("Return a list of categories when successful")
     void findAll_ShouldReturnAListOfCategories_WhenSuccessful() {
+        Mockito.when(categoryRepository.findAll()).thenReturn(categoryList);
+
         List<CategoryDTO> categoryList = categoryService.findAll();
         String expectedName = CategoryCreator.createValidCategory().getName();
         Long expectedId = CategoryCreator.createValidCategory().getId();
 
         Assertions.assertNotNull(categoryList);
-        Assertions.assertEquals(3L, categoryList.size());
+        Assertions.assertEquals(1L, categoryList.size());
         Assertions.assertEquals(expectedId, categoryList.get(0).getId());
         Assertions.assertEquals(expectedName, categoryList.get(0).getName());
     }
 
     @Test
-    @DisplayName("return a category when successful")
+    @DisplayName("Return a category when ID exists")
     void findById_ShouldReturnCategory_WhenSuccessful() {
+        Mockito.when(categoryRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(CategoryCreator.createValidCategory()));
+
         CategoryDTO category = categoryService.findById(1L);
         String expectedName = category.getName();
         Long expectedId = category.getId();
@@ -103,8 +102,10 @@ class CategoryServiceTest {
     }
 
     @Test
-    @DisplayName("return a list of categories when successful")
+    @DisplayName("Return a list of categories when name containing")
     void findByNameContaining_ShouldReturnListOfCategories_WhenSuccessful() {
+        Mockito.when(categoryRepository.findByNameContaining(ArgumentMatchers.anyString())).thenReturn(categoryList);
+
         String categoryName = "Category A";
         List<CategoryDTO> categoryList = categoryService.findByNameContaining(categoryName);
 
@@ -123,11 +124,8 @@ class CategoryServiceTest {
     @DisplayName("Save a new category when name is unique")
     void save_ShouldSaveNewCategory_WhenNameIsUnique() {
         CategoryDTO categoryDTO = new CategoryDTO();
-        Category category = new Category();
-        category.setName("Category A");
-
-        Mockito.when(modelMapper.map(categoryDTO, Category.class)).thenReturn(category);
         Mockito.when(categoryRepository.save(category)).thenReturn(CategoryCreator.createValidCategory());
+        Mockito.when(modelMapper.map(categoryDTO, Category.class)).thenReturn(category);
 
         CategoryDTO savedCategory = categoryService.save(categoryDTO);
 
@@ -138,9 +136,11 @@ class CategoryServiceTest {
     @Test
     @DisplayName("Throw DataIntegrityViolationException when category name already exists")
     void save_ShouldThrowDataIntegrityViolationException_WhenCategoryNameAlreadyExists() {
+        List<Category> existingCategories = Collections.singletonList(new Category(1L, "Category A"));
+        Mockito.when(categoryRepository.findByName("Category A")).thenReturn(existingCategories);
+
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setName("Category A");
-
 
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
             categoryService.save(categoryDTO);
