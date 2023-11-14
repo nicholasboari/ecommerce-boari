@@ -37,7 +37,8 @@ public class UserCreator {
                 .id(1L)
                 .firstName("Nicholas")
                 .lastName("Boari")
-                .order(OrderCreator.createValidListOfOrder())
+                .username("nicholasboari")
+                .email("nicholas@boari")
                 .build();
     }
 }

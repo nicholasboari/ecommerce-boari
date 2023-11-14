@@ -1,11 +1,14 @@
 package com.ecommerceboari.api.service;
 
 import com.ecommerceboari.api.auth.AuthenticationService;
+import com.ecommerceboari.api.dto.order.OrderResponseDTO;
 import com.ecommerceboari.api.dto.user.UserResponseDTO;
+import com.ecommerceboari.api.model.Order;
 import com.ecommerceboari.api.model.User;
 import com.ecommerceboari.api.repository.AddressRepository;
 import com.ecommerceboari.api.repository.UserRepository;
 import com.ecommerceboari.api.util.AddressCreator;
+import com.ecommerceboari.api.util.OrderCreator;
 import com.ecommerceboari.api.util.UserCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,18 +49,15 @@ class UserServiceTest {
     @Mock
     private ModelMapper modelMapper;
 
-    private List<User> userList;
     private User user;
-    private UserResponseDTO userResponseDTO;
 
     @BeforeEach
     void setup() {
-        userList = List.of(UserCreator.createValidUser());
         user = UserCreator.createValidUser();
-        userResponseDTO = UserCreator.createValidUserResponseDTO();
 
         Mockito.when(modelMapper.map(Mockito.any(User.class), Mockito.eq(UserResponseDTO.class))).thenReturn(UserCreator.createValidUserResponseDTO());
         Mockito.when(modelMapper.map(Mockito.any(UserResponseDTO.class), Mockito.eq(User.class))).thenReturn(UserCreator.createValidUser());
+        Mockito.when(modelMapper.map(Mockito.any(OrderResponseDTO.class), Mockito.eq(Order.class))).thenReturn(OrderCreator.createValidOrder());
     }
 
     @Test
@@ -102,8 +102,8 @@ class UserServiceTest {
     @DisplayName("Update user order when user ID exists")
     void updateUserOrder_ShouldUpdateUserOrder_WhenIdExists() {
         Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
-        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
 
+        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
         userService.updateUserOrder(UserCreator.createValidUserResponseDTO());
 
         Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any(User.class));

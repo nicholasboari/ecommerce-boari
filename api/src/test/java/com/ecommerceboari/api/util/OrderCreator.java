@@ -15,7 +15,6 @@ public class OrderCreator {
                 .id(1L)
                 .total(100D)
                 .moment(LocalDateTime.now())
-                .products(ProductCreator.createValidListOfProduct())
                 .build();
     }
 

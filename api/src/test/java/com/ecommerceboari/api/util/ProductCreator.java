@@ -12,6 +12,7 @@ public class ProductCreator {
         return Product.builder()
                 .id(1L)
                 .name("Iphone X")
+                .price(1000L)
                 .imageUrl("image1.png")
                 .brand(BrandCreator.createValidBrand())
                 .category(CategoryCreator.createValidCategory())
