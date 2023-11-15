@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/categories")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class CategoryController {
 
@@ -70,7 +70,7 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<CategoryDTO> save(@PathVariable Long id) {
+    public ResponseEntity<CategoryDTO> delete(@PathVariable Long id) {
         categoryService.delete(id);
         LOGGER.info("Received request to delete a category with ID: {}", id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

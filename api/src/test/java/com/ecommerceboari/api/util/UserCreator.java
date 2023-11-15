@@ -11,6 +11,8 @@ public class UserCreator {
                 .id(1L)
                 .firstName("Nicholas")
                 .lastName("Boari")
+                .email("nicholas@boari")
+                .username("nicholasboari")
                 .order(OrderCreator.createValidListOfOrderResponseDTO())
                 .address(AddressCreator.createValidAddressDTO())
                 .build();
@@ -33,6 +35,17 @@ public class UserCreator {
     }
 
     public static User createValidUser() {
+        return User.builder()
+                .id(1L)
+                .firstName("Nicholas")
+                .lastName("Boari")
+                .username("nicholasboari")
+                .email("nicholas@boari")
+                .order(OrderCreator.createValidListOfOrder())
+                .build();
+    }
+
+    public static User createValidUserWithoutOrder() {
         return User.builder()
                 .id(1L)
                 .firstName("Nicholas")

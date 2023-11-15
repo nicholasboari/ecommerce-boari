@@ -19,7 +19,7 @@ class UserRepositoryTest {
     @DisplayName("Save creates user when Successful")
     @Test
     void save_PersistUser_WhenSuccessful() {
-        User userToBeSaved = UserCreator.createValidUser();
+        User userToBeSaved = UserCreator.createValidUserWithoutOrder();
 
         User userSaved = this.userRepository.save(userToBeSaved);
 
@@ -30,7 +30,7 @@ class UserRepositoryTest {
     @DisplayName("Save updates user when Successful")
     @Test
     void update_ReplaceUser_WhenSuccessful() {
-        User userToBeSaved = UserCreator.createValidUser();
+        User userToBeSaved = UserCreator.createValidUserWithoutOrder();
 
         User userSaved = this.userRepository.save(userToBeSaved);
 
@@ -46,7 +46,7 @@ class UserRepositoryTest {
     @DisplayName("Delete removes user when Successful")
     @Test
     void delete_RemovesUser_WhenSuccessful() {
-        User userToBeSaved = UserCreator.createValidUser();
+        User userToBeSaved = UserCreator.createValidUserWithoutOrder();
 
         User userSaved = this.userRepository.save(userToBeSaved);
 
@@ -60,22 +60,22 @@ class UserRepositoryTest {
     @DisplayName("Find by email returns user when Successful")
     @Test
     void findByEmail_ReturnsUser_WhenSuccessful() {
-        User userToBeSaved = UserCreator.createValidUser();
+        User userToBeSaved = UserCreator.createValidUserWithoutOrder();
         this.userRepository.save(userToBeSaved);
 
         Optional<User> foundUser = this.userRepository.findByEmail(userToBeSaved.getEmail());
 
-        Assertions.assertThat(foundUser).isPresent().isEqualTo(userToBeSaved);
+        Assertions.assertThat(foundUser).contains(userToBeSaved);
     }
 
     @DisplayName("Find by username returns user when Successful")
     @Test
     void findByUsername_ReturnsUser_WhenSuccessful() {
-        User userToBeSaved = UserCreator.createValidUser();
+        User userToBeSaved = UserCreator.createValidUserWithoutOrder();
         this.userRepository.save(userToBeSaved);
 
         Optional<User> foundUser = this.userRepository.findByUsername(userToBeSaved.getUsername());
 
-        Assertions.assertThat(foundUser).isPresent().isEqualTo(userToBeSaved);
+        Assertions.assertThat(foundUser).contains(userToBeSaved);
     }
 }

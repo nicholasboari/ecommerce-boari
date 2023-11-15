@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/brands")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class BrandController {
 
@@ -25,7 +25,7 @@ public class BrandController {
     private final BrandService brandService;
 
     @GetMapping
-    public ResponseEntity<Page<BrandDTO>> findPaged(Pageable pageable) {
+    public ResponseEntity<Page<BrandDTO>> findAllPaged(Pageable pageable) {
         Page<BrandDTO> paged = brandService.findPaged(pageable);
         LOGGER.info("Received request to fetch all brands paginated");
         return ResponseEntity.ok().body(paged);
@@ -70,7 +70,7 @@ public class BrandController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<BrandDTO>  save(@PathVariable Long id) {
+    public ResponseEntity<BrandDTO> delete(@PathVariable Long id) {
         brandService.delete(id);
         LOGGER.info("Received request to delete a brand with ID: {}", id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
