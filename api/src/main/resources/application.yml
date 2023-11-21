@@ -10,8 +10,8 @@ env:
 aws:
   accessKey: ${ACCESS_KEY}
   secretKey: ${SECRET_KEY}
-  region: sa-east-1
+  region: ${REGION}
   s3:
     mock: true
     buckets:
-      customer: ecommerce-boari
+      customer: ${CUSTOMER_S3}
