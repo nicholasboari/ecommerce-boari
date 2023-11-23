@@ -18,18 +18,18 @@ services:
       - 3308
     networks:
       - ecommerce-boari-network
-  ecommerce-boari:
-    image: nicholasboari/ecommerce-boari
+  api:
+    image: ecommerce-boari:latest
     restart: always
     build: ./api
-    working_dir: /ecommerce-boari-api
+    working_dir: /ecommerce-boari
     environment:
       TZ: America/Sao_Paulo
-      SPRING.DATASOURCE.URL: ${DATASOURCE_URL}
-      SPRING.DATASOURCE.USERNAME: ${DATASOURCE_USERNAME}
-      SPRING.DATASOURCE.PASSWORD: ${DATASOURCE_PASSWORD}
-      SECRET_KEY_JWT: ${SECRET_KEY_JWT}
-      PROFILE_TYPE: ${PROFILE_TYPE}
+      SPRING.DATASOURCE.URL: jdbc:h2:mem:testdb
+      SPRING.DATASOURCE.USERNAME: sa
+      SPRING.DATASOURCE.PASSWORD:
+      SECRET_KEY_JWT: ${SECRET_KEY_JWT:-R2fCTQLWf1MH8mhl/7VibY7YuKEZ89PuQm2fk31/EWKWSi0Xi0Qu1fVkAk1trJKO}
+      PROFILE_TYPE: ${PROFILE_TYPE:-test}
     ports:
       - "8090:8090"
     command: mvn spring-boot:run

@@ -1,7 +1,7 @@
 package com.ecommerceboari.api.config;
 
-import com.ecommerceboari.api.jwt.JwtAuthenticationFilter;
-import lombok.RequiredArgsConstructor;
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,7 +18,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
+import com.ecommerceboari.api.jwt.JwtAuthenticationFilter;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
@@ -34,21 +36,38 @@ public class SecurityConfig {
         http.cors(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/v2/api-docs").permitAll()
-                .requestMatchers("/v3/api-docs").permitAll()
-                .requestMatchers("/v3/api-docs/**").permitAll()
-                .requestMatchers("/swagger-resources").permitAll()
-                .requestMatchers("/swagger-resources/**").permitAll()
-                .requestMatchers("/configuration/ui").permitAll()
-                .requestMatchers("/configuration/security").permitAll()
-                .requestMatchers("/swagger-ui/**").permitAll()
-                .requestMatchers("/webjars/**").permitAll()
-                .requestMatchers("/swagger-ui.html").permitAll()
+                .requestMatchers(
+                        "/api/v1/auth/**",
+                        "/v2/api-docs",
+                        "/v3/api-docs",
+                        "/v3/api-docs/**",
+                        "/swagger-resources",
+                        "/swagger-resources/**",
+                        "/configuration/ui",
+                        "/configuration/security",
+                        "/swagger-ui/**",
+                        "/webjars/**",
+                        "/swagger-ui.html")
+                .permitAll()
 
-                .requestMatchers(HttpMethod.GET,"/api/v1/products/**").permitAll()
-                .requestMatchers(HttpMethod.GET,"/api/v1/categories/**").permitAll()
-                .requestMatchers(HttpMethod.GET,"/api/v1/brands/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/products").hasAnyRole("ADMIN", "MANAGER")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/products").hasAnyRole("ADMIN", "MANAGER")
+
+                .requestMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/brands/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/users/all").hasAnyRole("ADMIN", "MANAGER")
+
+                .requestMatchers(HttpMethod.POST, "/api/v1/brands").hasAnyRole("ADMIN", "MANAGER")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/brands").hasAnyRole("ADMIN", "MANAGER")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/brands").hasAnyRole("ADMIN", "MANAGER")
+
+                .requestMatchers(HttpMethod.POST, "/api/v1/categories").hasAnyRole("ADMIN", "MANAGER")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/categories").hasAnyRole("ADMIN", "MANAGER")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/categories").hasAnyRole("ADMIN", "MANAGER")
+
+                .requestMatchers("/api/v1/cloud/**").hasAnyRole("ADMIN", "MANAGER")
+
                 .requestMatchers("/h2-console").permitAll()
                 .anyRequest().authenticated());
 

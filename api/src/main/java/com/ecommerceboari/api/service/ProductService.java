@@ -1,12 +1,7 @@
 package com.ecommerceboari.api.service;
 
-import com.ecommerceboari.api.dto.BrandDTO;
-import com.ecommerceboari.api.dto.CategoryDTO;
-import com.ecommerceboari.api.dto.ProductDTO;
-import com.ecommerceboari.api.exception.BadRequestException;
-import com.ecommerceboari.api.model.Product;
-import com.ecommerceboari.api.repository.ProductRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +11,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.ecommerceboari.api.dto.BrandDTO;
+import com.ecommerceboari.api.dto.CategoryDTO;
+import com.ecommerceboari.api.dto.ProductDTO;
+import com.ecommerceboari.api.exception.BadRequestException;
+import com.ecommerceboari.api.model.Product;
+import com.ecommerceboari.api.repository.ProductRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -37,19 +39,23 @@ public class ProductService {
     }
 
     public Page<ProductDTO> findAllPagedByName(String name, Pageable pageable) {
-        return productRepository.findByNameContainingIgnoreCase(name, pageable).map(product -> modelMapper.map(product, ProductDTO.class));
+        return productRepository.findByNameContainingIgnoreCase(name, pageable)
+                .map(product -> modelMapper.map(product, ProductDTO.class));
     }
 
     public Page<ProductDTO> findAllPagedByCategoryName(String name, Pageable pageable) {
-        return productRepository.findByCategoryNameContaining(name, pageable).map(product -> modelMapper.map(product, ProductDTO.class));
+        return productRepository.findByCategoryNameContaining(name, pageable)
+                .map(product -> modelMapper.map(product, ProductDTO.class));
     }
 
     public Page<ProductDTO> findAllPagedByBrandName(String name, Pageable pageable) {
-        return productRepository.findByBrandNameContaining(name, pageable).map(product -> modelMapper.map(product, ProductDTO.class));
+        return productRepository.findByBrandNameContaining(name, pageable)
+                .map(product -> modelMapper.map(product, ProductDTO.class));
     }
 
     public ProductDTO findById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new BadRequestException("Product not found!"));
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Product not found!"));
         return modelMapper.map(product, ProductDTO.class);
     }
 

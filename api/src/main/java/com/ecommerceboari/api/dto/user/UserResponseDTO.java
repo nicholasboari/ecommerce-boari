@@ -1,17 +1,18 @@
 package com.ecommerceboari.api.dto.user;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import com.ecommerceboari.api.dto.AddressDTO;
 import com.ecommerceboari.api.dto.order.OrderResponseDTO;
 import com.ecommerceboari.api.model.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor

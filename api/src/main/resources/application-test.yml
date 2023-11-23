@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: optional:secrets.properties
   datasource:
     driverClassName: org.h2.Driver
     url: jdbc:h2:mem:testdb
@@ -14,10 +16,8 @@ spring:
       mode: always
 
 aws:
-  accessKey: ${ACCESS_KEY}
-  secretKey: ${SECRET_KEY}
-  region: ${REGION}
+  region: any
   s3:
     mock: true
     buckets:
-      customer: ${CUSTOMER_S3}
+      customer: any

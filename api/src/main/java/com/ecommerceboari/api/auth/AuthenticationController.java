@@ -1,20 +1,26 @@
 package com.ecommerceboari.api.auth;
 
-import com.ecommerceboari.api.dto.AuthenticationDTO;
-import com.ecommerceboari.api.dto.user.UserLoginRequestDTO;
-import com.ecommerceboari.api.dto.user.UserRegisterRequestDTO;
-import com.ecommerceboari.api.dto.user.UserRegisterResponseDTO;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ecommerceboari.api.dto.AuthenticationDTO;
+import com.ecommerceboari.api.dto.user.UserLoginRequestDTO;
+import com.ecommerceboari.api.dto.user.UserRegisterRequestDTO;
+import com.ecommerceboari.api.dto.user.UserRegisterResponseDTO;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class AuthenticationController {
 

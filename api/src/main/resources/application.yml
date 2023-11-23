@@ -1,17 +1,10 @@
 server.port: 8090
 
 spring:
+  config:
+    import: optional:secrets.properties
   profiles:
     active: ${PROFILE_TYPE:test}
 
 env:
   secretKey: ${SECRET_KEY_JWT:R2fCTQLWf1MH8mhl/7VibY7YuKEZ89PuQm2fk31/EWKWSi0Xi0Qu1fVkAk1trJKO}
-
-aws:
-  accessKey: ${ACCESS_KEY}
-  secretKey: ${SECRET_KEY}
-  region: ${REGION}
-  s3:
-    mock: true
-    buckets:
-      customer: ${CUSTOMER_S3}

@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: optional:secrets.properties
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: ${DATASOURCE_URL}
@@ -12,3 +14,12 @@ spring:
   sql:
     init:
       mode: always
+
+aws:
+  accessKey: ${ACCESS_KEY}
+  secretKey: ${SECRET_KEY}
+  region: ${REGION}
+  s3:
+    mock: true
+    buckets:
+      customer: ${CUSTOMER_S3}

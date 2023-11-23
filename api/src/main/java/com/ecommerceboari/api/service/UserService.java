@@ -66,15 +66,16 @@ public class UserService {
         try {
             userResponseDTO.getOrder().forEach(orderDTO -> {
                 Order orderMapped = modelMapper.map(orderDTO, Order.class);
-                List<Product> products = new ArrayList<>();
+                if (!user.getOrder().contains(orderMapped)) {
+                    List<Product> products = new ArrayList<>();
+                    orderDTO.getProducts().forEach(productDTO -> {
+                        Product product = modelMapper.map(productDTO, Product.class);
+                        products.add(product);
+                    });
 
-                orderDTO.getProducts().forEach(productDTO -> {
-                    Product product = modelMapper.map(productDTO, Product.class);
-                    products.add(product);
-                });
-
-                orderMapped.setProducts(products);
-                user.getOrder().add(orderMapped);
+                    orderMapped.setProducts(products);
+                    user.getOrder().add(orderMapped);
+                }
             });
 
             User userSaved = userRepository.save(user);
