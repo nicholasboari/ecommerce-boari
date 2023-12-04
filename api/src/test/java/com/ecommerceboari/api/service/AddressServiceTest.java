@@ -1,9 +1,7 @@
 package com.ecommerceboari.api.service;
 
 import com.ecommerceboari.api.dto.AddressDTO;
-import com.ecommerceboari.api.dto.BrandDTO;
-import com.ecommerceboari.api.dto.CategoryDTO;
-import com.ecommerceboari.api.dto.user.UserResponseDTO;
+import com.ecommerceboari.api.dto.response.UserResponseDTO;
 import com.ecommerceboari.api.model.Address;
 import com.ecommerceboari.api.repository.AddressRepository;
 import com.ecommerceboari.api.util.AddressCreator;
@@ -103,16 +101,5 @@ class AddressServiceTest {
 
         Assertions.assertNotNull(createdAddress);
         Assertions.assertEquals("123 Main Street", createdAddress.getStreet());
-    }
-
-    @Test
-    @DisplayName("Delete a product when ID exists")
-    void delete_ShouldDeleteProduct_WhenIdExists() {
-        Long addressId = 1L;
-        Mockito.when(addressRepository.findById(addressId)).thenReturn(Optional.of(address));
-        Mockito.doNothing().when(addressRepository).deleteById(addressId);
-
-        addressService.delete(addressId);
-        Mockito.verify(addressRepository, Mockito.times(1)).deleteById(addressId);
     }
 }

@@ -18,4 +18,10 @@ public class BrandCreator {
                 .name("Brand A")
                 .build();
     }
+
+    public static BrandDTO createValidBrandDTOWithoutID() {
+        return BrandDTO.builder()
+                .name("Brand D")
+                .build();
+    }
 }

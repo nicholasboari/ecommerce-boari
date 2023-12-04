@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ecommerceboari.api.dto.user.UserResponseDTO;
+import com.ecommerceboari.api.dto.response.UserResponseDTO;
 import com.ecommerceboari.api.service.UserService;
 
 import lombok.RequiredArgsConstructor;

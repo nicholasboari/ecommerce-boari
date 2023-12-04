@@ -1,7 +1,7 @@
 package com.ecommerceboari.api.util;
 
-import com.ecommerceboari.api.dto.order.OrderRequestDTO;
-import com.ecommerceboari.api.dto.order.OrderResponseDTO;
+import com.ecommerceboari.api.dto.request.OrderRequestDTO;
+import com.ecommerceboari.api.dto.response.OrderResponseDTO;
 import com.ecommerceboari.api.model.Order;
 
 import java.time.LocalDateTime;

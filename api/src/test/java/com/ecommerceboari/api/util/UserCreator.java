@@ -1,7 +1,8 @@
 package com.ecommerceboari.api.util;
 
 import com.ecommerceboari.api.dto.CategoryDTO;
-import com.ecommerceboari.api.dto.user.UserResponseDTO;
+import com.ecommerceboari.api.dto.request.UserLoginRequestDTO;
+import com.ecommerceboari.api.dto.response.UserResponseDTO;
 import com.ecommerceboari.api.model.User;
 
 public class UserCreator {
@@ -52,6 +53,13 @@ public class UserCreator {
                 .lastName("Boari")
                 .username("nicholasboari")
                 .email("nicholas@boari")
+                .build();
+    }
+
+    public static UserLoginRequestDTO createValidUserLoginRequestDTO(){
+        return UserLoginRequestDTO.builder()
+                .email("nicholasboari@gmail.com")
+                .password("123")
                 .build();
     }
 }

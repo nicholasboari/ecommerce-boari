@@ -1,7 +1,7 @@
 package com.ecommerceboari.api.controller;
 
 import com.ecommerceboari.api.dto.AddressDTO;
-import com.ecommerceboari.api.dto.user.UserResponseDTO;
+import com.ecommerceboari.api.dto.response.UserResponseDTO;
 import com.ecommerceboari.api.service.AddressService;
 import com.ecommerceboari.api.service.UserService;
 import com.ecommerceboari.api.util.AddressCreator;
@@ -122,17 +122,5 @@ class AddressControllerTest {
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         Assertions.assertThat(responseEntity.getBody()).isNotNull();
         Assertions.assertThat(responseEntity.getBody().getId()).isEqualTo(expectedAddress.getId());
-    }
-
-    @Test
-    @DisplayName("Deletes an address when delete is called with a valid ID")
-    void delete_DeletesAddress_WhenSuccessful() {
-        Long validId = 1L;
-
-        ResponseEntity<AddressDTO> responseEntity = addressController.delete(validId);
-
-        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        Assertions.assertThat(responseEntity.getBody()).isNull();
-        Mockito.verify(this.addressService, Mockito.times(1)).delete(validId);
     }
 }

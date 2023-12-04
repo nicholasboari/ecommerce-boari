@@ -1,8 +1,8 @@
 package com.ecommerceboari.api.controller;
 
-import com.ecommerceboari.api.dto.order.OrderRequestDTO;
-import com.ecommerceboari.api.dto.order.OrderResponseDTO;
-import com.ecommerceboari.api.dto.user.UserResponseDTO;
+import com.ecommerceboari.api.dto.request.OrderRequestDTO;
+import com.ecommerceboari.api.dto.response.OrderResponseDTO;
+import com.ecommerceboari.api.dto.response.UserResponseDTO;
 import com.ecommerceboari.api.service.OrderService;
 import com.ecommerceboari.api.service.UserService;
 import com.ecommerceboari.api.util.OrderCreator;

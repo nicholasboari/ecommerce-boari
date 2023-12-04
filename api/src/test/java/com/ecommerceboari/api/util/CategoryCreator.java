@@ -18,4 +18,10 @@ public class CategoryCreator {
                 .name("Category A")
                 .build();
     }
+
+    public static CategoryDTO createValidCategoryDTOWithoutID() {
+        return CategoryDTO.builder()
+                .name("Category D")
+                .build();
+    }
 }

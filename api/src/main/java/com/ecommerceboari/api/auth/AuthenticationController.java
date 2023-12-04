@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerceboari.api.dto.AuthenticationDTO;
-import com.ecommerceboari.api.dto.user.UserLoginRequestDTO;
-import com.ecommerceboari.api.dto.user.UserRegisterRequestDTO;
-import com.ecommerceboari.api.dto.user.UserRegisterResponseDTO;
+import com.ecommerceboari.api.dto.request.UserLoginRequestDTO;
+import com.ecommerceboari.api.dto.request.UserRegisterRequestDTO;
+import com.ecommerceboari.api.dto.response.UserRegisterResponseDTO;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

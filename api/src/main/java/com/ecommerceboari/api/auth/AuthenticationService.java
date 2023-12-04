@@ -13,9 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ecommerceboari.api.dto.AuthenticationDTO;
-import com.ecommerceboari.api.dto.user.UserLoginRequestDTO;
-import com.ecommerceboari.api.dto.user.UserRegisterRequestDTO;
-import com.ecommerceboari.api.dto.user.UserRegisterResponseDTO;
+import com.ecommerceboari.api.dto.request.UserLoginRequestDTO;
+import com.ecommerceboari.api.dto.request.UserRegisterRequestDTO;
+import com.ecommerceboari.api.dto.response.UserRegisterResponseDTO;
 import com.ecommerceboari.api.exception.ConflictRequestException;
 import com.ecommerceboari.api.exception.EmailNotFound;
 import com.ecommerceboari.api.exception.UserForbiddenRequestException;

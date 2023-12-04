@@ -1,6 +1,6 @@
 package com.ecommerceboari.api.controller;
 
-import com.ecommerceboari.api.dto.user.UserResponseDTO;
+import com.ecommerceboari.api.dto.response.UserResponseDTO;
 import com.ecommerceboari.api.service.UserService;
 import com.ecommerceboari.api.util.UserCreator;
 import org.assertj.core.api.Assertions;

@@ -2,9 +2,9 @@ package com.ecommerceboari.api.service;
 
 import com.ecommerceboari.api.dto.ProductDTO;
 import com.ecommerceboari.api.dto.ProductOrderDTO;
-import com.ecommerceboari.api.dto.order.OrderRequestDTO;
-import com.ecommerceboari.api.dto.order.OrderResponseDTO;
-import com.ecommerceboari.api.dto.user.UserResponseDTO;
+import com.ecommerceboari.api.dto.request.OrderRequestDTO;
+import com.ecommerceboari.api.dto.response.OrderResponseDTO;
+import com.ecommerceboari.api.dto.response.UserResponseDTO;
 import com.ecommerceboari.api.model.Order;
 import com.ecommerceboari.api.model.Product;
 import com.ecommerceboari.api.repository.OrderRepository;

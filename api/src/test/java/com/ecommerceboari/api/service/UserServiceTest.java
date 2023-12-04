@@ -1,8 +1,8 @@
 package com.ecommerceboari.api.service;
 
 import com.ecommerceboari.api.auth.AuthenticationService;
-import com.ecommerceboari.api.dto.order.OrderResponseDTO;
-import com.ecommerceboari.api.dto.user.UserResponseDTO;
+import com.ecommerceboari.api.dto.response.OrderResponseDTO;
+import com.ecommerceboari.api.dto.response.UserResponseDTO;
 import com.ecommerceboari.api.exception.UserUnauthorizedRequestException;
 import com.ecommerceboari.api.model.Order;
 import com.ecommerceboari.api.model.User;

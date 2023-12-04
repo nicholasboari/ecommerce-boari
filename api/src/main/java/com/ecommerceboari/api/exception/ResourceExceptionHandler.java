@@ -49,21 +49,8 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(status).body(error);
     }
 
-    @ExceptionHandler(AddressNullException.class)
+    @ExceptionHandler({AddressNullException.class, EmailNotFound.class})
     public ResponseEntity<StandardError> address(AddressNullException e, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        StandardError error = StandardError.builder()
-                .message(e.getMessage())
-                .error("Not found")
-                .path(request.getRequestURI())
-                .status(status.value())
-                .timestamp(System.currentTimeMillis())
-                .build();
-        return ResponseEntity.status(status).body(error);
-    }
-
-    @ExceptionHandler(EmailNotFound.class)
-    public ResponseEntity<StandardError> email(EmailNotFound e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         StandardError error = StandardError.builder()
                 .message(e.getMessage())
@@ -81,6 +68,19 @@ public class ResourceExceptionHandler {
         StandardError error = StandardError.builder()
                 .message(e.getMessage())
                 .error("Unauthorized")
+                .path(request.getRequestURI())
+                .status(status.value())
+                .timestamp(System.currentTimeMillis())
+                .build();
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(UserForbiddenRequestException.class)
+    public ResponseEntity<StandardError> forbidden(UserForbiddenRequestException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        StandardError error = StandardError.builder()
+                .message(e.getMessage())
+                .error("Forbidden")
                 .path(request.getRequestURI())
                 .status(status.value())
                 .timestamp(System.currentTimeMillis())
