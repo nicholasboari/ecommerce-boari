@@ -105,7 +105,7 @@ docker compose up
 
 - Exemplo de retorno:
 
-```
+```json
 {
     "token": eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiaXNBY3RpdmUiOnRydWUsInN1YiI6Im5pY2hvbGFzYm9hcmkiLCJpYXQiOjE3MDA2ODEwNTEsImV4cCI6MTcwMTU0NTA1MX0.8edCSh1DGRr3DN7cE5ciZBtV0IG8spjqHgPKMOUdc48
 }
