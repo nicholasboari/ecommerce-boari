@@ -39,23 +39,23 @@ Este projeto é uma API de um e-commerce, na qual possui diversas funcionalidade
   - [Requisição do Histórico de Orders de um Usuário](#requisição-do-histórico-de-orders-de-um-usuário)
 - [Autor e Contato](#autor)
 
-### Iniciar o projeto via *Maven*:
+### Iniciar o projeto via Maven:
 
 1. Clone o repositório:
 
-```
+```shell
 git clone github.com/nicholasboari/ecommerce-boari-api
 ```
 
 2. Acesse a pasta da api:
 
-```
+```shell
 cd ecommerce-boari-api/api/
 ```
 
 3. Execute o projeto:
 
-```
+```shell
 mvn spring-boot:run
 ```
 
@@ -65,13 +65,13 @@ mvn spring-boot:run
 
 1. Acesse a pasta raiz do projeto (ecommerce-boari-api):
 
-```
+```shell
 cd ecommerce-boari-api/
 ```
 
 2. Execute o docker compose:
 
-```
+```shell
 docker compose up
 ```
 
@@ -96,7 +96,7 @@ docker compose up
 - Acesse a URL: *localhost:8090/api/v1/auth/login*
 - Realize a requisição através do método GET no formato JSON
 
-```
+```json
 {
     "email": "nicholasboari@gmail.com",
     "password": "123"
@@ -116,7 +116,7 @@ docker compose up
 - A requisição dos dados é via *POST* no formato *JSON*
 
 
-```
+```json
 {
     "email": "joaozinho@gmail.com",
     "password": "123",
@@ -144,7 +144,7 @@ docker compose up
 - Para criar endereço do usuário autenticado é necessário passar o token obtido no login e inseri-lo no Bearer Token da requsição
 - A criação do endereço é via *POST* e no formato *JSON*
 
-```
+```json
 {
     "cep": "12040-000",
     "country": "Brasil",
@@ -160,7 +160,7 @@ docker compose up
 - Para criar um produto o usuário autenticado é necessário uma role (permissão) de "ADMIN" ou "MANAGER"
 - A criação do endereço é via *POST* e no formato *JSON*
 
-```
+```json
 {
     "name": "Celular Xiaomi",
     "price": 1299.00,
@@ -182,7 +182,7 @@ docker compose up
 - Para criar uma order o usuário autenticado é ncessário ter um endereço associado e do token obtido no login
 - A criação do endereço é via *POST* e no formato *JSON*
 
-```
+```json
 {
     "products": [
         {
